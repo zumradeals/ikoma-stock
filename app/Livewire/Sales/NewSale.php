@@ -374,10 +374,15 @@ class NewSale extends Component
 
     // ── Privé ──────────────────────────────────────────────────────────────
 
-    private function hasIdentifiedCustomer(): bool
+    public function getHasIdentifiedCustomerProperty(): bool
     {
         return $this->customerId !== null
             || ($this->isPassingCustomer && ! empty($this->passingPhone));
+    }
+
+    private function hasIdentifiedCustomer(): bool
+    {
+        return $this->hasIdentifiedCustomer;
     }
 
     private function syncPaymentLines(): void

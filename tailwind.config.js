@@ -15,11 +15,12 @@ export default {
                 sans: ['Manrope', ...defaultTheme.fontFamily.sans],
             },
             colors: {
-                // Couleur d'action principale Ikoma
-                orange: {
-                    DEFAULT: '#E8590C',
-                    dark:    '#C24807',
-                    wash:    '#FCE7D9',
+                // Couleur de marque — pointe vers la CSS var injectée par le layout,
+                // personnalisable par société via Company::primary_color.
+                brand: {
+                    DEFAULT: 'var(--brand)',
+                    dark:    'var(--brand-dark)',
+                    wash:    'var(--brand-wash)',
                 },
                 // Fond chaud de l'app
                 cream: '#FBF6F0',
@@ -61,9 +62,9 @@ export default {
                 pill: '99px',
             },
             boxShadow: {
-                'orange-glow': '0 8px 16px -8px rgba(232,89,12,0.6)',
-                'card':        '0 18px 40px -14px rgba(30,20,10,0.35)',
-                'pos':         '0 30px 60px -24px rgba(20,15,10,0.55)',
+                'brand-glow': '0 8px 16px -8px rgba(232,89,12,0.6)',
+                'card':       '0 18px 40px -14px rgba(30,20,10,0.35)',
+                'pos':        '0 30px 60px -24px rgba(20,15,10,0.55)',
             },
         },
     },

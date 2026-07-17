@@ -20,7 +20,13 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         @livewireStyles
     </head>
-    <body class="font-sans antialiased bg-orange-50/40 text-gray-900" style="--brand: {{ auth()->user()->company?->primary_color ?: '#ea580c' }};">
+    @php
+        $brandHex  = auth()->user()->company?->primary_color ?: '#ea580c';
+        $brandDark = brand_dark($brandHex);
+        $brandWash = brand_wash($brandHex);
+    @endphp
+    <body class="font-sans antialiased bg-orange-50/40 text-gray-900"
+          style="--brand:{{ $brandHex }};--brand-dark:{{ $brandDark }};--brand-wash:{{ $brandWash }};">
         @include('layouts.partials.top-bar')
 
         <main class="pb-20">

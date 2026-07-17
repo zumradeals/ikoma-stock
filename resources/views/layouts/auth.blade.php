@@ -18,7 +18,8 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         @livewireStyles
     </head>
-    <body class="font-sans text-gray-900 antialiased">
+    <body class="font-sans text-gray-900 antialiased"
+          style="--brand:#ea580c;--brand-dark:#c24807;--brand-wash:#fce7d9;">
         <div class="min-h-screen flex flex-col sm:justify-center items-center pt-10 sm:pt-0 px-4 bg-gradient-to-b from-orange-50 via-white to-white">
             <div class="text-center">
                 <a href="/" wire:navigate class="inline-block">

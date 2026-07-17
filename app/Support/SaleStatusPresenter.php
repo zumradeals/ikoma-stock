@@ -13,26 +13,28 @@ class SaleStatusPresenter
     /**
      * Résout la clé de statut métier à passer à x-ikoma.status-badge.
      *
-     * @param  string  $paymentStatus   Valeur de InvoicePaymentStatus (PAID, PARTIAL, UNPAID, FREE…)
-     * @param  string  $deliveryStatus  Valeur de DeliveryStatus (DELIVERED, TO_PREPARE, READY, PARTIAL_DELIVERED…)
+     * @param  string  $paymentStatus   Valeur de InvoicePaymentStatus (PAID, PARTIAL, UNPAID)
+     * @param  string  $deliveryStatus  Valeur de InvoiceDeliveryStatus (DELIVERED, TO_PREPARE, READY, PARTIAL_DELIVERED)
+     * @param  int     $totalAmount     Montant total de la facture en centimes (0 = vente offerte)
      * @param  bool    $isCancelled     Vrai si la vente est en état CANCELLED
      * @return string  Une des clés : paid_delivered | to_deliver | partial | free | unpaid | cancelled
      */
     public static function resolve(
         string $paymentStatus,
         string $deliveryStatus,
+        int $totalAmount,
         bool $isCancelled = false,
     ): string {
         if ($isCancelled) {
             return 'cancelled';
         }
 
-        $payment  = strtoupper($paymentStatus);
-        $delivery = strtoupper($deliveryStatus);
-
-        if ($payment === 'FREE' || ($payment === 'PAID' && $delivery === 'FREE')) {
+        if ($totalAmount === 0) {
             return 'free';
         }
+
+        $payment  = strtoupper($paymentStatus);
+        $delivery = strtoupper($deliveryStatus);
 
         if ($payment === 'PAID' && $delivery === 'DELIVERED') {
             return 'paid_delivered';

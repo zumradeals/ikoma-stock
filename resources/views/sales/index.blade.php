@@ -21,10 +21,19 @@
                     </div>
                     <div class="text-right">
                         <p class="text-sm font-semibold text-gray-900"><x-money :amount="$sale->total_amount - $sale->discount_amount" /></p>
-                        <x-status-badge
-                            :status="match($sale->status->value) { 'VALIDATED' => 'green', 'CANCELLED' => 'red', default => 'gray' }"
-                            :label="$sale->status->label()"
-                        />
+                        @if ($sale->invoice)
+                            <x-ikoma.status-badge :status="\App\Support\SaleStatusPresenter::resolve(
+                                $sale->invoice->payment_status->value,
+                                $sale->invoice->delivery_status->value,
+                                $sale->invoice->total_amount,
+                                $sale->status->value === 'CANCELLED',
+                            )" />
+                        @else
+                            <x-status-badge
+                                :status="match($sale->status->value) { 'VALIDATED' => 'green', 'CANCELLED' => 'red', default => 'gray' }"
+                                :label="$sale->status->label()"
+                            />
+                        @endif
                     </div>
                 </a>
             @empty

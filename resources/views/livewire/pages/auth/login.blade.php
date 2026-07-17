@@ -11,7 +11,7 @@ new #[Layout('layouts.auth')] class extends Component
     public LoginForm $form;
 
     /**
-     * Handle an incoming authentication request.
+     * Traite la demande de connexion.
      */
     public function login(): void
     {
@@ -29,47 +29,63 @@ new #[Layout('layouts.auth')] class extends Component
 }; ?>
 
 <div>
-    <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
     <form wire:submit="login">
-        <!-- Email Address -->
+        <!-- Téléphone -->
         <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input wire:model="form.email" id="email" class="block mt-1 w-full" type="email" name="email" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('form.email')" class="mt-2" />
+            <x-input-label for="phone" value="Numéro de téléphone" />
+            <x-text-input
+                wire:model="form.phone"
+                id="phone"
+                class="block mt-1 w-full"
+                type="tel"
+                inputmode="tel"
+                name="phone"
+                required
+                autofocus
+                autocomplete="tel"
+            />
+            <x-input-error :messages="$errors->get('form.phone')" class="mt-2" />
         </div>
 
-        <!-- Password -->
+        <!-- Code (mot de passe) -->
         <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input wire:model="form.password" id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
-
+            <x-input-label for="password" value="Code" />
+            <x-text-input
+                wire:model="form.password"
+                id="password"
+                class="block mt-1 w-full"
+                type="password"
+                inputmode="numeric"
+                name="password"
+                required
+                autocomplete="current-password"
+            />
             <x-input-error :messages="$errors->get('form.password')" class="mt-2" />
         </div>
 
-        <!-- Remember Me -->
+        <!-- Se souvenir de moi -->
         <div class="block mt-4">
             <label for="remember" class="inline-flex items-center">
                 <input wire:model="form.remember" id="remember" type="checkbox" class="rounded border-gray-300 text-orange-600 shadow-sm focus:ring-orange-500" name="remember">
-                <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
+                <span class="ms-2 text-sm text-gray-600">Se souvenir de moi</span>
             </label>
         </div>
 
-        <div class="flex items-center justify-end mt-4">
-            @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500" href="{{ route('password.request') }}" wire:navigate>
-                    {{ __('Forgot your password?') }}
-                </a>
-            @endif
+        <div class="mt-4 space-y-3">
+            <x-ikoma.button-primary type="submit" class="w-full justify-center">
+                Entrer
+            </x-ikoma.button-primary>
 
-            <x-primary-button class="ms-3">
-                {{ __('Log in') }}
-            </x-primary-button>
+            @if (Route::has('password.request'))
+                <p class="text-center text-sm text-gray-500">
+                    Code oublié ?
+                    <a class="underline text-gray-600 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 rounded-sm" href="{{ route('password.request') }}" wire:navigate>
+                        Contacte ton responsable
+                    </a>
+                </p>
+            @endif
         </div>
     </form>
 </div>

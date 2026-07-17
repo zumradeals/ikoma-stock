@@ -27,9 +27,11 @@
     @endphp
     <body class="font-sans antialiased bg-orange-50/40 text-gray-900"
           style="--brand:{{ $brandHex }};--brand-dark:{{ $brandDark }};--brand-wash:{{ $brandWash }};">
-        @include('layouts.partials.top-bar')
+        <div class="{{ ($bareDesktop ?? false) ? 'lg:hidden' : '' }}">
+            @include('layouts.partials.top-bar')
+        </div>
 
-        <main class="pb-20">
+        <main class="{{ ($bareDesktop ?? false) ? 'pb-20 lg:pb-0' : 'pb-20' }}">
             @if (isset($header))
                 <header class="px-4 py-3 bg-white border-b border-gray-100">
                     {{ $header }}
@@ -39,7 +41,9 @@
             {{ $slot }}
         </main>
 
-        @include('layouts.partials.bottom-nav')
+        <div class="{{ ($bareDesktop ?? false) ? 'lg:hidden' : '' }}">
+            @include('layouts.partials.bottom-nav')
+        </div>
 
         <livewire:components.confirmation-modal />
 

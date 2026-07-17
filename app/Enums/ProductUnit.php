@@ -18,4 +18,20 @@ enum ProductUnit: string
     case M3 = 'M3';
     case PLANK = 'PLANK';
     case PACK = 'PACK';
+
+    public function label(): string
+    {
+        return match ($this) {
+            self::UNIT => 'Unité',
+            self::BAR => 'Barre',
+            self::TON => 'Tonne',
+            self::KG => 'Kilogramme',
+            self::BAG => 'Sac',
+            self::SHEET => 'Tôle / Feuille',
+            self::METER => 'Mètre',
+            self::M3 => 'Mètre cube',
+            self::PLANK => 'Planche',
+            self::PACK => 'Paquet',
+        };
+    }
 }

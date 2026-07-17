@@ -53,7 +53,7 @@
         @error('reason') <p class="text-xs text-red-600 mt-1">{{ $message }}</p> @enderror
     </div>
 
-    <button type="button" wire:click="submit" class="w-full rounded-lg bg-indigo-600 text-white text-sm font-medium py-2.5">
+    <button type="button" wire:click="submit" class="w-full rounded-lg bg-orange-600 text-white text-sm font-medium py-2.5">
         Enregistrer la correction
     </button>
 </div>

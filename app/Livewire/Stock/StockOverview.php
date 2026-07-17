@@ -11,14 +11,18 @@ use App\Models\Product;
 use App\Models\StockLevel;
 use App\Models\Warehouse;
 use App\Modules\Stock\Services\StockService;
+use App\Services\ImageOptimizer;
 use Illuminate\Validation\Rule;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 
 #[Layout('layouts.app')]
 class StockOverview extends Component
 {
+    use WithFileUploads;
+
     public string $search = '';
 
     public string $locationFilter = '';
@@ -52,6 +56,10 @@ class StockOverview extends Component
     public string $initialStockLocation = '';
 
     public string $initialStockQuantity = '';
+
+    public $productImage = null;
+
+    public ?string $currentProductImagePath = null;
 
     public function getWarehousesProperty()
     {
@@ -181,10 +189,11 @@ class StockOverview extends Component
 
     public function openProductForm(?int $productId = null): void
     {
-        $this->reset(['productName', 'productCategoryId', 'productReference', 'productSalePrice', 'productCostPrice', 'initialStockLocation', 'initialStockQuantity']);
+        $this->reset(['productName', 'productCategoryId', 'productReference', 'productSalePrice', 'productCostPrice', 'initialStockLocation', 'initialStockQuantity', 'productImage']);
         $this->productUnit = 'UNIT';
         $this->productLowStockThreshold = '0';
         $this->editingProductId = null;
+        $this->currentProductImagePath = null;
 
         if ($productId) {
             $product = Product::findOrFail($productId);
@@ -198,6 +207,7 @@ class StockOverview extends Component
             $this->productSalePrice = (string) ($product->sale_price / 100);
             $this->productCostPrice = $product->cost_price !== null ? (string) ($product->cost_price / 100) : '';
             $this->productLowStockThreshold = (string) $product->low_stock_threshold;
+            $this->currentProductImagePath = $product->image_path;
         } else {
             $this->authorize('create', Product::class);
         }
@@ -226,6 +236,7 @@ class StockOverview extends Component
                 )),
             ],
             'initialStockQuantity' => 'nullable|numeric|min:0',
+            'productImage' => 'nullable|image|max:10240',
         ]);
 
         $attributes = [
@@ -237,6 +248,10 @@ class StockOverview extends Component
             'cost_price' => $this->productCostPrice !== '' ? (int) round(((float) $this->productCostPrice) * 100) : null,
             'low_stock_threshold' => (int) ($this->productLowStockThreshold ?: 0),
         ];
+
+        if ($this->productImage) {
+            $attributes['image_path'] = ImageOptimizer::storeCompressed($this->productImage, 'products');
+        }
 
         if ($this->editingProductId) {
             $product = Product::findOrFail($this->editingProductId);

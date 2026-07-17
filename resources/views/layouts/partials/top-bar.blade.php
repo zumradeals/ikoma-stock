@@ -11,7 +11,7 @@
 
         <x-dropdown align="right" width="48">
             <x-slot name="trigger">
-                <button type="button" class="h-9 w-9 flex items-center justify-center rounded-full bg-gray-100 text-gray-700 text-sm font-medium">
+                <button type="button" class="h-9 w-9 flex items-center justify-center rounded-full bg-orange-50 text-orange-700 text-sm font-semibold">
                     {{ Illuminate\Support\Str::of(auth()->user()->name)->substr(0, 1)->upper() }}
                 </button>
             </x-slot>

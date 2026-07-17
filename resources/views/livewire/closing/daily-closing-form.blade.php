@@ -3,7 +3,7 @@
         <p class="text-center text-sm text-gray-400 py-10 px-4">
             Aucun point de vente configuré pour votre société.
             @if (auth()->user()->role === \App\Enums\UserRole::ADMIN_COMPANY)
-                <a href="{{ route('admin.index') }}" wire:navigate class="text-indigo-600 font-medium">Créer un point de vente</a>
+                <a href="{{ route('admin.index') }}" wire:navigate class="text-orange-600 font-medium">Créer un point de vente</a>
             @endif
         </p>
     @else
@@ -11,7 +11,7 @@
         <h1 class="text-base font-semibold text-gray-900">Point de journée — {{ $closing->business_date }}</h1>
         <x-status-badge
             :status="match($closing->status->value) { 'VALIDATED' => 'green', 'PENDING_VALIDATION' => 'orange', 'REJECTED' => 'red', default => 'gray' }"
-            :label="$closing->status->value"
+            :label="$closing->status->label()"
         />
     </div>
 
@@ -71,7 +71,7 @@
                 <textarea wire:model="observations" rows="2" class="mt-1 block w-full rounded-lg border-gray-200"></textarea>
             </div>
 
-            <button type="button" wire:click="close" class="w-full rounded-lg bg-indigo-600 text-white text-sm font-medium py-2.5">
+            <button type="button" wire:click="close" class="w-full rounded-lg bg-orange-600 text-white text-sm font-medium py-2.5">
                 Fermer la journée
             </button>
         </div>

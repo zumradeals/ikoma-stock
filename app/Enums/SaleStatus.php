@@ -26,4 +26,13 @@ enum SaleStatus: string
             self::CANCELLED->value => [],
         ];
     }
+
+    public function label(): string
+    {
+        return match ($this) {
+            self::DRAFT => 'Brouillon',
+            self::VALIDATED => 'Validée',
+            self::CANCELLED => 'Annulée',
+        };
+    }
 }

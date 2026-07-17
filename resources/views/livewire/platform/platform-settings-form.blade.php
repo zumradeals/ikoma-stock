@@ -1,7 +1,7 @@
 <div class="p-3 space-y-3">
     <div class="flex items-center justify-between">
         <h1 class="text-base font-semibold text-gray-900">Paramètres plateforme</h1>
-        <a href="{{ route('platform.index') }}" wire:navigate class="text-xs text-indigo-600 font-medium">← Sociétés</a>
+        <a href="{{ route('platform.index') }}" wire:navigate class="text-xs text-orange-600 font-medium">← Sociétés</a>
     </div>
 
     @if ($saved)
@@ -30,7 +30,7 @@
             </div>
             <div>
                 <x-input-label value="Chiffrement" />
-                <select wire:model="mailEncryption" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block mt-1 w-full">
+                <select wire:model="mailEncryption" class="border-gray-300 focus:border-orange-500 focus:ring-orange-500 rounded-md shadow-sm block mt-1 w-full">
                     <option value="tls">TLS</option>
                     <option value="ssl">SSL</option>
                     <option value="">Aucun</option>

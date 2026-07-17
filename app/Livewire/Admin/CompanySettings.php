@@ -6,6 +6,7 @@ use App\Enums\UserRole;
 use App\Models\Outlet;
 use App\Models\User;
 use App\Models\Warehouse;
+use App\Services\ImageOptimizer;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -134,7 +135,7 @@ class CompanySettings extends Component
             'companyInvoicePrefix' => 'required|string|max:10',
             'companyFooterText' => 'nullable|string|max:500',
             'companyPrimaryColor' => 'nullable|regex:/^#[0-9A-Fa-f]{6}$/',
-            'companyLogo' => 'nullable|image|max:2048',
+            'companyLogo' => 'nullable|image|max:10240',
         ]);
 
         $attributes = [
@@ -149,7 +150,7 @@ class CompanySettings extends Component
         ];
 
         if ($this->companyLogo) {
-            $attributes['logo_path'] = $this->companyLogo->store('companies/logos', 'public');
+            $attributes['logo_path'] = ImageOptimizer::storeCompressed($this->companyLogo, 'companies/logos', maxWidth: 500);
         }
 
         $this->company->update($attributes);

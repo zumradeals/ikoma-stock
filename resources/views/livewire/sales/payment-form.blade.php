@@ -30,7 +30,7 @@
             <label class="text-sm font-medium text-gray-700">Mode de paiement</label>
             <select wire:model="method" class="mt-1 block w-full rounded-lg border-gray-200">
                 @foreach ($this->methods as $m)
-                    <option value="{{ $m->value }}">{{ $m->value }}</option>
+                    <option value="{{ $m->value }}">{{ $m->label() }}</option>
                 @endforeach
             </select>
         </div>
@@ -46,7 +46,7 @@
             @error('proof') <p class="text-xs text-red-600 mt-1">{{ $message }}</p> @enderror
         </div>
 
-        <button type="submit" class="w-full rounded-lg bg-indigo-600 text-white text-sm font-medium py-2.5">
+        <button type="submit" class="w-full rounded-lg bg-orange-600 text-white text-sm font-medium py-2.5">
             Enregistrer le paiement
         </button>
     </form>

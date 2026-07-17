@@ -20,7 +20,7 @@
         <div class="absolute right-0 mt-2 w-80 max-w-[90vw] bg-white rounded-xl shadow-lg border border-gray-100 z-50">
             <div class="flex items-center justify-between px-4 py-3 border-b border-gray-100">
                 <span class="text-sm font-semibold text-gray-900">Notifications</span>
-                <button type="button" wire:click="markAllRead" class="text-xs text-indigo-600 font-medium">Tout marquer lu</button>
+                <button type="button" wire:click="markAllRead" class="text-xs text-orange-600 font-medium">Tout marquer lu</button>
             </div>
 
             <div class="max-h-96 overflow-y-auto divide-y divide-gray-100">

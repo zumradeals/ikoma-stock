@@ -10,7 +10,7 @@
                 'CANCELLED' => 'red',
                 default => 'gray',
             }"
-            :label="$transfer->status->value"
+            :label="$transfer->status->label()"
         />
     </div>
 
@@ -49,13 +49,13 @@
     @if ($this->canManage)
         <div class="space-y-2">
             @if ($transfer->status->value === 'REQUESTED')
-                <button type="button" wire:click="accept" class="w-full rounded-lg bg-indigo-600 text-white text-sm font-medium py-2.5">
+                <button type="button" wire:click="accept" class="w-full rounded-lg bg-orange-600 text-white text-sm font-medium py-2.5">
                     Accepter le transfert
                 </button>
             @endif
 
             @if ($transfer->status->value === 'ACCEPTED')
-                <button type="button" wire:click="openShipForm" class="w-full rounded-lg bg-indigo-600 text-white text-sm font-medium py-2.5">
+                <button type="button" wire:click="openShipForm" class="w-full rounded-lg bg-orange-600 text-white text-sm font-medium py-2.5">
                     Expédier
                 </button>
             @endif

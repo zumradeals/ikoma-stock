@@ -92,7 +92,7 @@
         <div class="flex items-center justify-between mb-2">
             <h2 class="text-sm font-semibold text-gray-900">Utilisateurs</h2>
             @if ($this->canManage)
-                <button type="button" wire:click="openUserForm" class="rounded-lg bg-indigo-600 text-white text-xs font-medium px-2.5 py-1.5">
+                <button type="button" wire:click="openUserForm" class="rounded-lg bg-orange-600 text-white text-xs font-medium px-2.5 py-1.5">
                     + Ajouter
                 </button>
             @endif
@@ -114,9 +114,9 @@
 
                 <div>
                     <x-input-label value="Rôle" />
-                    <select wire:model="userRole" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block mt-1 w-full">
+                    <select wire:model="userRole" class="border-gray-300 focus:border-orange-500 focus:ring-orange-500 rounded-md shadow-sm block mt-1 w-full">
                         @foreach ($this->assignableRoles as $role)
-                            <option value="{{ $role->value }}">{{ $role->value }}</option>
+                            <option value="{{ $role->value }}">{{ $role->label() }}</option>
                         @endforeach
                     </select>
                     <x-input-error :messages="$errors->get('userRole')" class="mt-1" />
@@ -125,7 +125,7 @@
                 @if (in_array($userRole, ['SELLER', 'OUTLET_MANAGER']))
                     <div>
                         <x-input-label value="Point de vente" />
-                        <select wire:model="userOutletId" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block mt-1 w-full">
+                        <select wire:model="userOutletId" class="border-gray-300 focus:border-orange-500 focus:ring-orange-500 rounded-md shadow-sm block mt-1 w-full">
                             <option value="">—</option>
                             @foreach ($this->outlets as $outlet)
                                 <option value="{{ $outlet->id }}">{{ $outlet->name }}</option>
@@ -154,7 +154,7 @@
                         <p class="text-xs text-gray-400">{{ $user->email }}</p>
                     </div>
                     <div class="flex items-center gap-2">
-                        <x-status-badge status="gray" :label="$user->role->value" />
+                        <x-status-badge status="gray" :label="$user->role->label()" />
                         @if ($this->canManage && ! in_array($user->role->value, ['ADMIN_COMPANY', 'SUPER_ADMIN']))
                             <button type="button" wire:click="openUserForm({{ $user->id }})" class="rounded-lg bg-gray-100 text-gray-700 text-xs font-medium px-2 py-1">Éditer</button>
                             <button type="button" wire:click="requestToggleUser({{ $user->id }})" class="rounded-lg bg-gray-100 text-gray-700 text-xs font-medium px-2 py-1">
@@ -173,7 +173,7 @@
         <div class="flex items-center justify-between mb-2">
             <h2 class="text-sm font-semibold text-gray-900">Points de vente</h2>
             @if ($this->canManage)
-                <button type="button" wire:click="openOutletForm" class="rounded-lg bg-indigo-600 text-white text-xs font-medium px-2.5 py-1.5">
+                <button type="button" wire:click="openOutletForm" class="rounded-lg bg-orange-600 text-white text-xs font-medium px-2.5 py-1.5">
                     + Ajouter
                 </button>
             @endif
@@ -233,7 +233,7 @@
         <div class="flex items-center justify-between mb-2">
             <h2 class="text-sm font-semibold text-gray-900">Dépôts</h2>
             @if ($this->canManage)
-                <button type="button" wire:click="openWarehouseForm" class="rounded-lg bg-indigo-600 text-white text-xs font-medium px-2.5 py-1.5">
+                <button type="button" wire:click="openWarehouseForm" class="rounded-lg bg-orange-600 text-white text-xs font-medium px-2.5 py-1.5">
                     + Ajouter
                 </button>
             @endif

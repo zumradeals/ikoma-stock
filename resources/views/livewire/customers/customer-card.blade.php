@@ -10,7 +10,7 @@
     <livewire:customers.customer-alert :customer="$customer" wire:key="card-alert-{{ $customer->id }}" />
 
     <div class="flex gap-2">
-        <a href="{{ route('sales.create', ['customer_id' => $customer->id]) }}" wire:navigate class="flex-1 rounded-lg bg-indigo-600 text-white text-sm font-medium py-2.5 text-center">
+        <a href="{{ route('sales.create', ['customer_id' => $customer->id]) }}" wire:navigate class="flex-1 rounded-lg bg-orange-600 text-white text-sm font-medium py-2.5 text-center">
             Nouvelle vente
         </a>
         @if ($this->openReceivables->isNotEmpty())

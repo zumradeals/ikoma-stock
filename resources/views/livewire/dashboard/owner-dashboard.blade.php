@@ -58,7 +58,7 @@
             @forelse ($this->transfersInTransit as $transfer)
                 <div class="flex justify-between px-3 py-2 text-sm">
                     <span class="text-gray-600">{{ $transfer->number }}</span>
-                    <x-status-badge status="orange" :label="$transfer->status->value" />
+                    <x-status-badge status="orange" :label="$transfer->status->label()" />
                 </div>
             @empty
                 <p class="text-center text-sm text-gray-400 py-6">Aucun transfert en cours.</p>
@@ -72,7 +72,7 @@
             @forelse ($this->overdueDeliveries as $invoice)
                 <a href="{{ route('deliveries.show', $invoice) }}" wire:navigate class="flex justify-between px-3 py-2 text-sm">
                     <span class="text-gray-600">{{ $invoice->number }}</span>
-                    <x-status-badge status="red" :label="$invoice->delivery_status->value" />
+                    <x-status-badge status="red" :label="$invoice->delivery_status->label()" />
                 </a>
             @empty
                 <p class="text-center text-sm text-gray-400 py-6">Aucun retard.</p>

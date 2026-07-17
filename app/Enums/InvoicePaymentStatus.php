@@ -42,4 +42,15 @@ enum InvoicePaymentStatus: string
 
         return self::UNPAID;
     }
+
+    public function label(): string
+    {
+        return match ($this) {
+            self::UNPAID => 'Non payée',
+            self::PARTIAL => 'Paiement partiel',
+            self::PAID => 'Payée',
+            self::OVERDUE => 'En retard',
+            self::CANCELLED => 'Annulée',
+        };
+    }
 }

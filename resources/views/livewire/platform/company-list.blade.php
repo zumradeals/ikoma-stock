@@ -8,7 +8,7 @@
             <button
                 type="button"
                 wire:click="openCreateForm"
-                class="rounded-lg bg-indigo-600 text-white text-xs font-medium px-3 py-1.5"
+                class="rounded-lg bg-orange-600 text-white text-xs font-medium px-3 py-1.5"
             >
                 + Nouvelle société
             </button>

@@ -30,4 +30,15 @@ enum InvoiceDeliveryStatus: string
             self::CANCELLED->value => [],
         ];
     }
+
+    public function label(): string
+    {
+        return match ($this) {
+            self::TO_PREPARE => 'À préparer',
+            self::READY => 'Prête',
+            self::PARTIAL_DELIVERED => 'Livrée en partie',
+            self::DELIVERED => 'Livrée',
+            self::CANCELLED => 'Annulée',
+        };
+    }
 }

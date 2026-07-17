@@ -18,6 +18,10 @@ return Application::configure(basePath: dirname(__DIR__))
             'super-admin' => \App\Http\Middleware\SuperAdminOnly::class,
             'role' => \App\Http\Middleware\EnsureRole::class,
         ]);
+
+        $middleware->web(append: [
+            \App\Http\Middleware\RedirectIfNotInstalled::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(

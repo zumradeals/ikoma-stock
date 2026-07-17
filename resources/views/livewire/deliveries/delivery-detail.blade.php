@@ -5,7 +5,7 @@
         <h1 class="text-base font-semibold text-gray-900">{{ $invoice->number }}</h1>
         <x-status-badge
             :status="match($invoice->delivery_status->value) { 'DELIVERED' => 'green', 'PARTIAL_DELIVERED' => 'orange', 'CANCELLED' => 'gray', default => 'gray' }"
-            :label="$invoice->delivery_status->value"
+            :label="$invoice->delivery_status->label()"
         />
     </div>
 
@@ -40,7 +40,7 @@
             @endif
 
             @if ($invoice->delivery_status !== $InvoiceDeliveryStatus::DELIVERED)
-                <button type="button" wire:click="submitDelivery" class="flex-1 rounded-lg bg-indigo-600 text-white text-sm font-medium py-2.5">
+                <button type="button" wire:click="submitDelivery" class="flex-1 rounded-lg bg-orange-600 text-white text-sm font-medium py-2.5">
                     Livrer
                 </button>
             @endif
@@ -54,7 +54,7 @@
                 @foreach ($invoice->deliveries as $delivery)
                     <a href="{{ route('deliveries.pdf', $delivery) }}" target="_blank" class="flex items-center justify-between px-3 py-2.5">
                         <span class="text-sm text-gray-700">Livraison du {{ $delivery->delivered_at->format('d/m/Y H:i') }}</span>
-                        <span class="text-xs text-indigo-600 font-medium">PDF</span>
+                        <span class="text-xs text-orange-600 font-medium">PDF</span>
                     </a>
                 @endforeach
             </div>

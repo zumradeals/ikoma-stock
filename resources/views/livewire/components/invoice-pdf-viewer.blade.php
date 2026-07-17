@@ -13,7 +13,7 @@
                     'CANCELLED' => 'gray',
                     default => 'gray',
                 }"
-                :label="$invoice->payment_status->value"
+                :label="$invoice->payment_status->label()"
             />
         </div>
 
@@ -45,7 +45,7 @@
     <div class="grid grid-cols-3 gap-2">
         <a
             href="{{ route('invoices.download', $invoice) }}"
-            class="rounded-lg bg-indigo-600 text-white text-sm font-medium py-2.5 text-center"
+            class="rounded-lg bg-orange-600 text-white text-sm font-medium py-2.5 text-center"
         >
             Télécharger
         </a>

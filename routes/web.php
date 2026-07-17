@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DeliveryController;
+use App\Http\Controllers\Install\InstallController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\SaleController;
@@ -24,6 +25,11 @@ use App\Livewire\Stock\StockOverview;
 use App\Livewire\Transfers\TransferDetail;
 use App\Livewire\Transfers\TransferList;
 use Illuminate\Support\Facades\Route;
+
+Route::prefix('install')->group(function () {
+    Route::get('/', [InstallController::class, 'index'])->name('install.index');
+    Route::post('/', [InstallController::class, 'store'])->name('install.store');
+});
 
 Route::get('/', function () {
     if (! auth()->check()) {

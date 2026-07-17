@@ -2,7 +2,7 @@
     @if ($step <= 5)
         <div class="flex items-center gap-1 px-3 py-2 bg-white border-b border-gray-100">
             @foreach (['Catalogue', 'Client', 'Paiement', 'Livraison', 'Récap'] as $i => $label)
-                <div class="flex-1 h-1 rounded-full {{ $step >= $i + 1 ? 'bg-indigo-600' : 'bg-gray-200' }}"></div>
+                <div class="flex-1 h-1 rounded-full {{ $step >= $i + 1 ? 'bg-orange-600' : 'bg-gray-200' }}"></div>
             @endforeach
         </div>
     @endif
@@ -60,7 +60,7 @@
             @endif
 
             @if ($this->customer)
-                <div class="rounded-lg bg-indigo-50 px-3 py-2 text-sm text-indigo-800">
+                <div class="rounded-lg bg-orange-50 px-3 py-2 text-sm text-orange-800">
                     Client sélectionné : <strong>{{ $this->customer->name }}</strong>
                 </div>
                 <livewire:customers.customer-alert :customer="$this->customer" wire:key="alert-{{ $this->customer->id }}" />
@@ -116,7 +116,7 @@
                     <select wire:model="paymentLines.{{ $index }}.method" class="flex-1 rounded-lg border-gray-200 text-sm">
                         @foreach (\App\Enums\PaymentMethod::cases() as $m)
                             @if ($m !== \App\Enums\PaymentMethod::CUSTOMER_CREDIT)
-                                <option value="{{ $m->value }}">{{ $m->value }}</option>
+                                <option value="{{ $m->value }}">{{ $m->label() }}</option>
                             @endif
                         @endforeach
                     </select>
@@ -176,7 +176,7 @@
                 <p>Livraison : <strong>{{ $deliveryChoice === 'now' ? 'Maintenant' : 'Plus tard' }}</strong></p>
             </div>
 
-            <button type="button" wire:click="validateSale" class="w-full rounded-lg bg-indigo-600 text-white text-sm font-medium py-3">
+            <button type="button" wire:click="validateSale" class="w-full rounded-lg bg-orange-600 text-white text-sm font-medium py-3">
                 Valider la vente
             </button>
         </div>
@@ -187,7 +187,7 @@
         <div class="p-4">
             <div class="rounded-lg bg-green-50 text-green-700 text-sm px-3 py-2.5 mb-3">Vente validée avec succès.</div>
             <livewire:components.invoice-pdf-viewer :invoice="$invoice" wire:key="new-sale-viewer-{{ $invoice->id }}" />
-            <a href="{{ route('sales.create') }}" wire:navigate class="block text-center mt-4 text-sm text-indigo-600 font-medium">
+            <a href="{{ route('sales.create') }}" wire:navigate class="block text-center mt-4 text-sm text-orange-600 font-medium">
                 Nouvelle vente
             </a>
         </div>
@@ -199,7 +199,7 @@
                 Précédent
             </button>
             @if ($step < 5)
-                <button type="button" wire:click="nextStep" class="flex-1 rounded-lg bg-indigo-600 text-white text-sm font-medium py-2.5">
+                <button type="button" wire:click="nextStep" class="flex-1 rounded-lg bg-orange-600 text-white text-sm font-medium py-2.5">
                     Suivant
                 </button>
             @endif

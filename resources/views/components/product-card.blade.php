@@ -22,13 +22,13 @@
         <div class="mt-auto flex items-center justify-between pt-1.5">
             <x-status-badge
                 :status="$lowStock ? 'red' : 'green'"
-                :label="($available / 100) . ' ' . ($product->unit?->value ?? '')"
+                :label="($available / 100) . ' ' . ($product->unit?->label() ?? '')"
             />
 
             <button
                 type="button"
                 wire:click="$dispatch('cart.add', { productId: {{ $product->id }} })"
-                class="h-7 w-7 rounded-full bg-indigo-600 text-white text-lg leading-none flex items-center justify-center"
+                class="h-7 w-7 rounded-full bg-orange-600 text-white text-lg leading-none flex items-center justify-center"
                 aria-label="Ajouter {{ $product->name }} au panier"
             >
                 +

@@ -46,7 +46,7 @@ class PaymentForm extends Component
             'amount' => 'required|integer|min:1',
             'method' => 'required|string',
             'reference' => 'nullable|string|max:100',
-            'proof' => 'nullable|image|max:4096',
+            'proof' => 'nullable|image|max:10240',
         ]);
 
         $proofPath = $this->proof?->store('payment-proofs', 'public');

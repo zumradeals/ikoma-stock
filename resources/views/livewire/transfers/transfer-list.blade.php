@@ -2,7 +2,7 @@
     <div class="flex items-center justify-between">
         <h1 class="text-base font-semibold text-gray-900">Transferts</h1>
         @can('create', \App\Models\Transfer::class)
-            <button type="button" wire:click="openCreateForm" class="rounded-lg bg-indigo-600 text-white text-xs font-medium px-3 py-1.5">
+            <button type="button" wire:click="openCreateForm" class="rounded-lg bg-orange-600 text-white text-xs font-medium px-3 py-1.5">
                 + Nouveau transfert
             </button>
         @endcan
@@ -19,7 +19,7 @@
             <div class="grid grid-cols-2 gap-3">
                 <div>
                     <x-input-label value="Dépôt source" />
-                    <select wire:model="sourceWarehouseId" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block mt-1 w-full">
+                    <select wire:model="sourceWarehouseId" class="border-gray-300 focus:border-orange-500 focus:ring-orange-500 rounded-md shadow-sm block mt-1 w-full">
                         <option value="">—</option>
                         @foreach ($this->warehouses as $warehouse)
                             <option value="{{ $warehouse->id }}">{{ $warehouse->name }}</option>
@@ -29,7 +29,7 @@
                 </div>
                 <div>
                     <x-input-label value="Point de vente destination" />
-                    <select wire:model="destinationOutletId" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block mt-1 w-full">
+                    <select wire:model="destinationOutletId" class="border-gray-300 focus:border-orange-500 focus:ring-orange-500 rounded-md shadow-sm block mt-1 w-full">
                         <option value="">—</option>
                         @foreach ($this->outlets as $outlet)
                             <option value="{{ $outlet->id }}">{{ $outlet->name }}</option>
@@ -43,7 +43,7 @@
                 <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">Produits</p>
                 @foreach ($lines as $index => $line)
                     <div class="flex gap-2 items-start" wire:key="line-{{ $index }}">
-                        <select wire:model="lines.{{ $index }}.product_id" class="flex-1 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm text-sm">
+                        <select wire:model="lines.{{ $index }}.product_id" class="flex-1 border-gray-300 focus:border-orange-500 focus:ring-orange-500 rounded-md shadow-sm text-sm">
                             <option value="">Produit —</option>
                             @foreach ($this->products as $product)
                                 <option value="{{ $product->id }}">{{ $product->name }}</option>
@@ -53,7 +53,7 @@
                         <button type="button" wire:click="removeLine({{ $index }})" class="shrink-0 rounded-lg bg-gray-100 text-gray-500 text-xs px-2 py-2">✕</button>
                     </div>
                 @endforeach
-                <button type="button" wire:click="addLine" class="text-xs text-indigo-600 font-medium">+ Ajouter une ligne</button>
+                <button type="button" wire:click="addLine" class="text-xs text-orange-600 font-medium">+ Ajouter une ligne</button>
             </div>
 
             <div class="flex gap-3 pt-1">
@@ -85,7 +85,7 @@
                         'CANCELLED' => 'red',
                         default => 'gray',
                     }"
-                    :label="$transfer->status->value"
+                    :label="$transfer->status->label()"
                 />
             </a>
         @empty

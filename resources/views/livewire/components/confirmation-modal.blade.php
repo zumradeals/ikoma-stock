@@ -20,7 +20,7 @@
                     <button
                         type="button"
                         wire:click="confirm"
-                        class="flex-1 rounded-lg text-white text-sm font-medium py-2.5 {{ $danger ? 'bg-red-600' : 'bg-indigo-600' }}"
+                        class="flex-1 rounded-lg text-white text-sm font-medium py-2.5 {{ $danger ? 'bg-red-600' : 'bg-orange-600' }}"
                     >
                         Confirmer
                     </button>

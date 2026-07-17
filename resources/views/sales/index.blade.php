@@ -1,11 +1,16 @@
 <x-app-layout>
     <div class="p-3 space-y-3">
-        <div class="flex items-center justify-between">
-            <h1 class="text-base font-semibold text-gray-900">Ventes</h1>
-            <a href="{{ route('sales.create') }}" wire:navigate class="rounded-lg bg-indigo-600 text-white text-sm font-medium px-3 py-1.5">
-                Nouvelle vente
-            </a>
-        </div>
+        <h1 class="text-base font-semibold text-gray-900">Ventes</h1>
+
+        <a
+            href="{{ route('sales.create') }}"
+            wire:navigate
+            class="flex items-center justify-center gap-2 rounded-xl bg-[var(--brand,#ea580c)] text-white text-base font-semibold py-3.5 shadow-sm"
+        >
+            <span class="text-xl leading-none">+</span> Nouvelle vente
+        </a>
+
+        <p class="text-xs font-medium text-gray-400 uppercase tracking-wide pt-1">Historique</p>
 
         <div class="divide-y divide-gray-100 rounded-xl border border-gray-200 bg-white">
             @forelse ($sales as $sale)
@@ -18,7 +23,7 @@
                         <p class="text-sm font-semibold text-gray-900"><x-money :amount="$sale->total_amount - $sale->discount_amount" /></p>
                         <x-status-badge
                             :status="match($sale->status->value) { 'VALIDATED' => 'green', 'CANCELLED' => 'red', default => 'gray' }"
-                            :label="$sale->status->value"
+                            :label="$sale->status->label()"
                         />
                     </div>
                 </a>

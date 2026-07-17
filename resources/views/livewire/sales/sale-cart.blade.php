@@ -34,7 +34,7 @@
             <button type="button" wire:click="chooseCustomer" class="flex-1 rounded-lg bg-gray-100 text-gray-700 text-sm font-medium py-2.5">
                 Choisir client
             </button>
-            <button type="button" wire:click="checkout" class="flex-1 rounded-lg bg-indigo-600 text-white text-sm font-medium py-2.5">
+            <button type="button" wire:click="checkout" class="flex-1 rounded-lg bg-orange-600 text-white text-sm font-medium py-2.5">
                 Passer au paiement
             </button>
         </div>

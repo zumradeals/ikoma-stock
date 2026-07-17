@@ -10,4 +10,12 @@ enum CustomerType: string
 
     case REGISTERED = 'REGISTERED';
     case PASSING = 'PASSING';
+
+    public function label(): string
+    {
+        return match ($this) {
+            self::REGISTERED => 'Client enregistré',
+            self::PASSING => 'Client de passage',
+        };
+    }
 }

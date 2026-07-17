@@ -3,7 +3,7 @@
         <select wire:model.live="typeFilter" class="rounded-lg border-gray-200 text-sm">
             <option value="">Tous les types</option>
             @foreach ($this->types as $type)
-                <option value="{{ $type->value }}">{{ $type->value }}</option>
+                <option value="{{ $type->value }}">{{ $type->label() }}</option>
             @endforeach
         </select>
 
@@ -33,7 +33,7 @@
                 <button type="button" wire:click="toggle({{ $movement->id }})" class="w-full flex items-center justify-between px-3 py-2.5 text-left">
                     <div>
                         <p class="text-sm font-medium text-gray-900">{{ $movement->product->name }}</p>
-                        <p class="text-xs text-gray-400">{{ $movement->movement_type->value }} · {{ $movement->movement_date->format('d/m/Y H:i') }} · {{ $movement->user?->name ?? '—' }}</p>
+                        <p class="text-xs text-gray-400">{{ $movement->movement_type->label() }} · {{ $movement->movement_date->format('d/m/Y H:i') }} · {{ $movement->user?->name ?? '—' }}</p>
                     </div>
                     <span class="text-sm font-semibold text-gray-900">{{ number_format($movement->quantity / 100, 0, ',', ' ') }}</span>
                 </button>
@@ -41,10 +41,10 @@
                 @if ($expanded === $movement->id)
                     <div class="px-3 pb-3 text-xs text-gray-500 space-y-1">
                         @if ($movement->location_source_type)
-                            <p>Source : {{ $movement->location_source_type->value }} #{{ $movement->location_source_id }}</p>
+                            <p>Source : {{ $movement->location_source_type->label() }} #{{ $movement->location_source_id }}</p>
                         @endif
                         @if ($movement->location_destination_type)
-                            <p>Destination : {{ $movement->location_destination_type->value }} #{{ $movement->location_destination_id }}</p>
+                            <p>Destination : {{ $movement->location_destination_type->label() }} #{{ $movement->location_destination_id }}</p>
                         @endif
                         @if ($movement->reason)
                             <p>Motif : {{ $movement->reason }}</p>

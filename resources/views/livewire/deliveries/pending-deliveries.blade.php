@@ -4,7 +4,7 @@
             <button
                 type="button"
                 wire:click="$set('filter', '{{ $key }}')"
-                class="shrink-0 rounded-full px-3 py-1.5 text-xs font-medium {{ $filter === $key ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-600' }}"
+                class="shrink-0 rounded-full px-3 py-1.5 text-xs font-medium {{ $filter === $key ? 'bg-orange-600 text-white' : 'bg-gray-100 text-gray-600' }}"
             >
                 {{ $label }}
             </button>
@@ -23,7 +23,7 @@
                         @endif
                     </p>
                 </div>
-                <x-status-badge :status="$this->status($invoice)" :label="$invoice->delivery_status->value" />
+                <x-status-badge :status="$this->status($invoice)" :label="$invoice->delivery_status->label()" />
             </a>
         @empty
             <p class="text-center text-sm text-gray-400 py-10">Aucune livraison en attente.</p>

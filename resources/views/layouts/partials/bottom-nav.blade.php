@@ -25,7 +25,7 @@
                 href="{{ route($tab['route']) }}"
                 wire:navigate
                 class="flex flex-col items-center justify-center gap-0.5 text-[11px] {{ $active ? '' : 'text-gray-500' }}"
-                @style([$active ? 'color: var(--brand, #4f46e5)' : ''])
+                @style([$active ? 'color: var(--brand, #ea580c)' : ''])
             >
                 <x-icon :name="$tab['icon']" class="h-6 w-6" />
                 {{ $tab['label'] }}

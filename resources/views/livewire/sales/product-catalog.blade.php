@@ -29,7 +29,7 @@
             <button
                 type="button"
                 wire:click="selectCategory(null)"
-                class="shrink-0 rounded-full px-3 py-1.5 text-xs font-medium {{ $categoryId === null ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-600' }}"
+                class="shrink-0 rounded-full px-3 py-1.5 text-xs font-medium {{ $categoryId === null ? 'bg-orange-600 text-white' : 'bg-gray-100 text-gray-600' }}"
             >
                 Toutes
             </button>
@@ -37,7 +37,7 @@
                 <button
                     type="button"
                     wire:click="selectCategory({{ $category->id }})"
-                    class="shrink-0 rounded-full px-3 py-1.5 text-xs font-medium {{ $categoryId === $category->id ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-600' }}"
+                    class="shrink-0 rounded-full px-3 py-1.5 text-xs font-medium {{ $categoryId === $category->id ? 'bg-orange-600 text-white' : 'bg-gray-100 text-gray-600' }}"
                 >
                     {{ $category->name }}
                 </button>
@@ -69,7 +69,7 @@
                     <button
                         type="button"
                         wire:click="addToCart({{ $product->id }})"
-                        class="h-8 w-8 shrink-0 rounded-full bg-indigo-600 text-white flex items-center justify-center"
+                        class="h-8 w-8 shrink-0 rounded-full bg-orange-600 text-white flex items-center justify-center"
                         aria-label="Ajouter {{ $product->name }} au panier"
                     >
                         +
@@ -99,7 +99,7 @@
                     <p class="text-lg font-semibold text-gray-900"><x-money :amount="$this->showingProduct->sale_price" /></p>
                     <div class="flex gap-2 pt-2">
                         <button type="button" wire:click="closeProduct" class="flex-1 rounded-lg bg-gray-100 text-gray-700 text-sm font-medium py-2.5">Fermer</button>
-                        <button type="button" wire:click="addToCart({{ $this->showingProduct->id }})" class="flex-1 rounded-lg bg-indigo-600 text-white text-sm font-medium py-2.5">Ajouter au panier</button>
+                        <button type="button" wire:click="addToCart({{ $this->showingProduct->id }})" class="flex-1 rounded-lg bg-orange-600 text-white text-sm font-medium py-2.5">Ajouter au panier</button>
                     </div>
                 </div>
             </div>

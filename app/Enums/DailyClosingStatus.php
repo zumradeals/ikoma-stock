@@ -28,4 +28,14 @@ enum DailyClosingStatus: string
             self::REJECTED->value => [self::PENDING_VALIDATION],
         ];
     }
+
+    public function label(): string
+    {
+        return match ($this) {
+            self::OPEN => 'En cours',
+            self::PENDING_VALIDATION => 'En attente de validation',
+            self::VALIDATED => 'Validée',
+            self::REJECTED => 'Rejetée',
+        };
+    }
 }

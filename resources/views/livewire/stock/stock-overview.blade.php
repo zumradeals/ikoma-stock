@@ -20,7 +20,7 @@
             <button type="button" wire:click="openCategoryForm" class="flex-1 rounded-lg bg-gray-100 text-gray-700 text-xs font-medium px-3 py-2">
                 + Nouvelle catégorie
             </button>
-            <button type="button" wire:click="openProductForm" class="flex-1 rounded-lg bg-indigo-600 text-white text-xs font-medium px-3 py-2">
+            <button type="button" wire:click="openProductForm" class="flex-1 rounded-lg bg-orange-600 text-white text-xs font-medium px-3 py-2">
                 + Nouveau produit
             </button>
         </div>
@@ -63,6 +63,28 @@
     @if ($showProductForm)
         <form wire:submit="saveProduct" class="rounded-xl border border-gray-200 bg-white p-4 space-y-3">
             <div>
+                <div>
+                    <x-input-label value="Photo du produit" />
+                    <label class="mt-1 flex items-center gap-3 cursor-pointer">
+                        <span class="h-16 w-16 shrink-0 rounded-xl bg-gray-100 border border-gray-200 overflow-hidden flex items-center justify-center">
+                            @if ($productImage)
+                                <img src="{{ $productImage->temporaryUrl() }}" class="h-full w-full object-cover" alt="">
+                            @elseif ($currentProductImagePath)
+                                <img src="{{ \Illuminate\Support\Facades\Storage::url($currentProductImagePath) }}" class="h-full w-full object-cover" alt="">
+                            @else
+                                <svg class="h-8 w-8 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3 4.5h18M3 4.5A2.25 2.25 0 015.25 2.25h13.5A2.25 2.25 0 0121 4.5m-18 0v15A2.25 2.25 0 005.25 21.75h13.5A2.25 2.25 0 0021 19.5v-15" />
+                                </svg>
+                            @endif
+                        </span>
+                        <span class="rounded-lg bg-gray-100 text-gray-700 text-sm font-medium px-3 py-2">
+                            Choisir une photo
+                        </span>
+                        <input type="file" wire:model="productImage" accept="image/*" class="hidden">
+                    </label>
+                    <x-input-error :messages="$errors->get('productImage')" class="mt-1" />
+                </div>
+
                 <x-input-label value="Nom du produit" />
                 <x-text-input wire:model="productName" type="text" class="block mt-1 w-full" />
                 <x-input-error :messages="$errors->get('productName')" class="mt-1" />
@@ -70,7 +92,7 @@
 
             <div>
                 <x-input-label value="Catégorie" />
-                <select wire:model="productCategoryId" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block mt-1 w-full">
+                <select wire:model="productCategoryId" class="border-gray-300 focus:border-orange-500 focus:ring-orange-500 rounded-md shadow-sm block mt-1 w-full">
                     <option value="">—</option>
                     @foreach ($this->categories as $category)
                         <option value="{{ $category->id }}">{{ $category->name }}</option>
@@ -86,9 +108,9 @@
                 </div>
                 <div>
                     <x-input-label value="Unité" />
-                    <select wire:model="productUnit" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block mt-1 w-full">
+                    <select wire:model="productUnit" class="border-gray-300 focus:border-orange-500 focus:ring-orange-500 rounded-md shadow-sm block mt-1 w-full">
                         @foreach ($this->units as $unit)
-                            <option value="{{ $unit->value }}">{{ $unit->value }}</option>
+                            <option value="{{ $unit->value }}">{{ $unit->label() }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -117,7 +139,7 @@
                     <div class="grid grid-cols-2 gap-3">
                         <div>
                             <x-input-label value="Emplacement" />
-                            <select wire:model="initialStockLocation" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block mt-1 w-full">
+                            <select wire:model="initialStockLocation" class="border-gray-300 focus:border-orange-500 focus:ring-orange-500 rounded-md shadow-sm block mt-1 w-full">
                                 <option value="">—</option>
                                 @foreach ($this->warehouses as $warehouse)
                                     <option value="WAREHOUSE:{{ $warehouse->id }}">{{ $warehouse->name }}</option>
@@ -149,16 +171,16 @@
     @endif
 
     <div class="flex gap-2 overflow-x-auto pb-1">
-        <button type="button" wire:click="$set('locationFilter', '')" class="shrink-0 rounded-full px-3 py-1.5 text-xs font-medium {{ $locationFilter === '' ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-600' }}">
+        <button type="button" wire:click="$set('locationFilter', '')" class="shrink-0 rounded-full px-3 py-1.5 text-xs font-medium {{ $locationFilter === '' ? 'bg-orange-600 text-white' : 'bg-gray-100 text-gray-600' }}">
             Tous les emplacements
         </button>
         @foreach ($this->warehouses as $warehouse)
-            <button type="button" wire:click="$set('locationFilter', 'WAREHOUSE:{{ $warehouse->id }}')" class="shrink-0 rounded-full px-3 py-1.5 text-xs font-medium {{ $locationFilter === 'WAREHOUSE:'.$warehouse->id ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-600' }}">
+            <button type="button" wire:click="$set('locationFilter', 'WAREHOUSE:{{ $warehouse->id }}')" class="shrink-0 rounded-full px-3 py-1.5 text-xs font-medium {{ $locationFilter === 'WAREHOUSE:'.$warehouse->id ? 'bg-orange-600 text-white' : 'bg-gray-100 text-gray-600' }}">
                 {{ $warehouse->name }}
             </button>
         @endforeach
         @foreach ($this->outlets as $outlet)
-            <button type="button" wire:click="$set('locationFilter', 'OUTLET:{{ $outlet->id }}')" class="shrink-0 rounded-full px-3 py-1.5 text-xs font-medium {{ $locationFilter === 'OUTLET:'.$outlet->id ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-600' }}">
+            <button type="button" wire:click="$set('locationFilter', 'OUTLET:{{ $outlet->id }}')" class="shrink-0 rounded-full px-3 py-1.5 text-xs font-medium {{ $locationFilter === 'OUTLET:'.$outlet->id ? 'bg-orange-600 text-white' : 'bg-gray-100 text-gray-600' }}">
                 {{ $outlet->name }}
             </button>
         @endforeach
@@ -185,10 +207,23 @@
                 @forelse ($this->rows as $row)
                     <tr wire:key="stock-row-{{ $row['product']->id }}">
                         <td class="px-3 py-2 font-medium text-gray-900 sticky left-0 bg-white whitespace-nowrap">
-                            {{ $row['product']->name }}
-                            @unless ($row['product']->is_active)
-                                <x-status-badge status="red" label="Inactif" class="ml-1" />
-                            @endunless
+                            <div class="flex items-center gap-2">
+                                <span class="h-8 w-8 shrink-0 rounded-lg bg-gray-100 overflow-hidden flex items-center justify-center">
+                                    @if ($row['product']->image_path)
+                                        <img src="{{ \Illuminate\Support\Facades\Storage::url($row['product']->image_path) }}" class="h-full w-full object-cover" alt="">
+                                    @else
+                                        <svg class="h-4 w-4 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3 4.5h18M3 4.5A2.25 2.25 0 015.25 2.25h13.5A2.25 2.25 0 0121 4.5m-18 0v15A2.25 2.25 0 005.25 21.75h13.5A2.25 2.25 0 0021 19.5v-15" />
+                                        </svg>
+                                    @endif
+                                </span>
+                                <span>
+                                    {{ $row['product']->name }}
+                                    @unless ($row['product']->is_active)
+                                        <x-status-badge status="red" label="Inactif" class="ml-1" />
+                                    @endunless
+                                </span>
+                            </div>
                         </td>
                         @foreach ($this->warehouses as $warehouse)
                             @php $qty = $this->availableAt($row['byLocation'], 'WAREHOUSE:'.$warehouse->id); @endphp

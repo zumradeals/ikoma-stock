@@ -40,4 +40,18 @@ enum TransferStatus: string
             self::CANCELLED->value => [],
         ];
     }
+
+    public function label(): string
+    {
+        return match ($this) {
+            self::DRAFT => 'Brouillon',
+            self::REQUESTED => 'Demandé',
+            self::ACCEPTED => 'Accepté',
+            self::IN_PREPARATION => 'En préparation',
+            self::SHIPPED => 'Expédié',
+            self::RECEIVED => 'Reçu',
+            self::PARTIALLY_RECEIVED => 'Reçu en partie',
+            self::CANCELLED => 'Annulé',
+        };
+    }
 }

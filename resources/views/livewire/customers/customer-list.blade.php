@@ -6,7 +6,7 @@
             placeholder="Rechercher par nom ou téléphone..."
             class="flex-1 rounded-lg border-gray-200 text-sm"
         >
-        <button type="button" wire:click="openCreateForm" class="shrink-0 rounded-lg bg-indigo-600 text-white text-xs font-medium px-3 py-2">
+        <button type="button" wire:click="openCreateForm" class="shrink-0 rounded-lg bg-orange-600 text-white text-xs font-medium px-3 py-2">
             + Nouveau client
         </button>
     </div>

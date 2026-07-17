@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
         <meta name="csrf-token" content="{{ csrf_token() }}">
-        <meta name="theme-color" content="#0f172a">
+        <meta name="theme-color" content="#ea580c">
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
         <meta name="apple-mobile-web-app-title" content="IKOMA STOCK">
@@ -16,7 +16,7 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         @livewireStyles
     </head>
-    <body class="font-sans antialiased bg-gray-50 text-gray-900" style="--brand: {{ auth()->user()->company?->primary_color ?: '#4f46e5' }};">
+    <body class="font-sans antialiased bg-orange-50/40 text-gray-900" style="--brand: {{ auth()->user()->company?->primary_color ?: '#ea580c' }};">
         @include('layouts.partials.top-bar')
 
         <main class="pb-20">

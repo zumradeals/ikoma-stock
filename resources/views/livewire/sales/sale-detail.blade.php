@@ -8,7 +8,7 @@
         <h1 class="text-base font-semibold text-gray-900">{{ $sale->number }}</h1>
         <x-status-badge
             :status="match($sale->status->value) { 'VALIDATED' => 'green', 'CANCELLED' => 'red', default => 'gray' }"
-            :label="$sale->status->value"
+            :label="$sale->status->label()"
         />
     </div>
 
@@ -43,7 +43,7 @@
 
     @if ($sale->invoice)
         @if ($sale->invoice->balance_due > 0 && $sale->status->value !== 'CANCELLED')
-            <a href="{{ route('sales.payment', $sale) }}" wire:navigate class="block text-center rounded-lg bg-indigo-600 text-white text-sm font-medium py-2.5">
+            <a href="{{ route('sales.payment', $sale) }}" wire:navigate class="block text-center rounded-lg bg-orange-600 text-white text-sm font-medium py-2.5">
                 Enregistrer un paiement
             </a>
         @endif

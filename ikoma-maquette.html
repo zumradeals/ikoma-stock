@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Ikoma Stock — Maquette</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --orange:#E8590C;
+    --orange-dark:#C24807;
+    --orange-wash:#FCE7D9;
+    --cream:#FBF6F0;
+    --ink:#211D1A;
+    --ink-soft:#6B6259;
+    --line:#EAE0D4;
+    --white:#FFFFFF;
+    --success:#1F8A55;
+    --success-wash:#E4F5EA;
+    --gold:#B9790A;
+    --gold-wash:#FBF0D9;
+    --danger:#C0392B;
+    --danger-wash:#FBEAE7;
+    --info:#2454A8;
+    --info-wash:#E9F0FB;
+    --charcoal:#201F22;
+    --charcoal-2:#2B2A2E;
+    --charcoal-line:#3A383C;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Manrope',sans-serif;
+    background:#F1ECE4;
+    color:var(--ink);
+    padding:32px 20px 80px;
+  }
+  .page-head{max-width:1180px;margin:0 auto 36px;}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--orange-dark);background:var(--orange-wash);
+    padding:6px 12px;border-radius:99px;margin-bottom:14px;
+  }
+  h1{font-size:28px;font-weight:800;margin:0 0 8px;letter-spacing:-.01em;}
+  .sub{color:var(--ink-soft);font-size:15px;max-width:640px;line-height:1.55;margin:0;}
+  .jump{max-width:1180px;margin:26px auto 0;display:flex;gap:10px;flex-wrap:wrap;}
+  .jump a{
+    text-decoration:none;font-size:13px;font-weight:700;color:var(--ink);
+    background:var(--white);border:1px solid var(--line);padding:9px 16px;border-radius:99px;
+  }
+  .jump a:hover{border-color:var(--orange);color:var(--orange-dark);}
+
+  section.block{max-width:1180px;margin:64px auto 0;}
+  .block-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:22px;flex-wrap:wrap;}
+  .block-head h2{font-size:20px;margin:0;font-weight:800;}
+  .block-head p{margin:4px 0 0;color:var(--ink-soft);font-size:13.5px;max-width:520px;}
+  .tag{font-size:12px;font-weight:700;color:var(--ink-soft);background:var(--white);border:1px solid var(--line);padding:5px 11px;border-radius:99px;white-space:nowrap;}
+
+  /* ===== MOBILE ROW ===== */
+  .phones{display:flex;gap:22px;flex-wrap:wrap;align-items:flex-start;}
+  .phone-col{width:290px;flex:none;}
+  .phone-caption{font-size:12.5px;color:var(--ink-soft);line-height:1.5;margin-top:12px;padding:0 4px;}
+  .phone-caption b{color:var(--ink);}
+  .phone{
+    width:290px;height:606px;background:var(--cream);
+    border-radius:34px;border:9px solid var(--charcoal);
+    box-shadow:0 18px 40px -14px rgba(30,20,10,.35);
+    position:relative;overflow:hidden;display:flex;flex-direction:column;
+  }
+  .notch{
+    position:absolute;top:0;left:50%;transform:translateX(-50%);
+    width:110px;height:20px;background:var(--charcoal);border-radius:0 0 14px 14px;z-index:5;
+  }
+  .app-header{
+    padding:26px 16px 10px;display:flex;align-items:center;justify-content:space-between;background:var(--white);border-bottom:1px solid var(--line);
+  }
+  .brand{display:flex;align-items:center;gap:9px;}
+  .brand-mark{
+    width:26px;height:26px;border-radius:7px;background:var(--orange);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-weight:800;font-size:11px;
+  }
+  .brand-name{font-weight:800;font-size:14px;}
+  .header-icons{display:flex;gap:10px;color:var(--ink-soft);}
+  .role-pill{
+    font-size:10px;font-weight:800;background:var(--ink);color:#fff;padding:3px 9px;border-radius:99px;letter-spacing:.03em;
+  }
+
+  .app-body{flex:1;overflow:hidden;padding:14px 14px 0;display:flex;flex-direction:column;gap:14px;}
+
+  /* accueil */
+  .cta-row{display:flex;flex-direction:column;gap:9px;}
+  .cta{
+    display:flex;align-items:center;gap:11px;border-radius:16px;padding:14px 15px;font-weight:800;font-size:14px;
+    border:1px solid transparent;
+  }
+  .cta.primary{background:var(--orange);color:#fff;box-shadow:0 8px 16px -8px rgba(232,89,12,.6);}
+  .cta.secondary{background:var(--white);color:var(--ink);border-color:var(--line);}
+  .cta .ic{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex:none;}
+  .cta.primary .ic{background:rgba(255,255,255,.22);}
+  .cta.secondary .ic{background:var(--orange-wash);}
+  .cta .chev{margin-left:auto;opacity:.5;font-size:13px;}
+
+  .section-label{font-size:11.5px;font-weight:800;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.05em;margin:2px 0 -2px;}
+  .urgent-list{display:flex;flex-direction:column;gap:8px;}
+  .urgent-item{
+    display:flex;align-items:center;gap:10px;background:var(--white);border:1px solid var(--line);
+    border-radius:13px;padding:11px 12px;font-size:12.5px;font-weight:700;
+  }
+  .dot{width:9px;height:9px;border-radius:99px;flex:none;}
+  .dot.gold{background:var(--gold);} .dot.info{background:var(--info);} .dot.danger{background:var(--danger);}
+  .urgent-item span.msg{flex:1;color:var(--ink);}
+  .urgent-item .amt{color:var(--ink-soft);font-weight:800;}
+
+  .bottom-nav{
+    margin-top:auto;display:flex;justify-content:space-around;padding:10px 6px 16px;
+    background:var(--white);border-top:1px solid var(--line);
+  }
+  .nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;font-weight:800;color:var(--ink-soft);}
+  .nav-item.active{color:var(--orange);}
+  .nav-item .dot-ic{font-size:16px;}
+
+  /* vente flow */
+  .step-meta{display:flex;align-items:center;justify-content:space-between;}
+  .step-meta .lbl{font-size:11px;font-weight:800;color:var(--ink-soft);}
+  .step-dots{display:flex;gap:5px;}
+  .step-dots i{width:16px;height:5px;border-radius:99px;background:var(--line);display:block;}
+  .step-dots i.on{background:var(--orange);}
+  .question{font-size:19px;font-weight:800;line-height:1.25;margin:2px 0 4px;}
+  .opt{
+    display:flex;align-items:center;gap:12px;border:2px solid var(--line);border-radius:15px;padding:13px 14px;font-weight:800;font-size:13.5px;background:var(--white);
+  }
+  .opt.sel{border-color:var(--orange);background:var(--orange-wash);}
+  .opt .radio{width:19px;height:19px;border-radius:99px;border:2px solid var(--line);flex:none;}
+  .opt.sel .radio{border-color:var(--orange);background:radial-gradient(circle,var(--orange) 0 40%, transparent 42%);}
+  .cart-foot{
+    margin-top:auto;background:var(--white);border-top:1px solid var(--line);padding:12px 14px 16px;display:flex;flex-direction:column;gap:10px;
+  }
+  .cart-foot .totrow{display:flex;justify-content:space-between;font-size:12.5px;color:var(--ink-soft);font-weight:700;}
+  .cart-foot .totrow b{color:var(--ink);font-size:16px;}
+  .btn-continue{background:var(--orange);color:#fff;text-align:center;padding:13px;border-radius:13px;font-weight:800;font-size:13.5px;}
+
+  /* historique */
+  .sale-card{background:var(--white);border:1px solid var(--line);border-radius:14px;padding:12px 13px;display:flex;flex-direction:column;gap:6px;}
+  .sale-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;}
+  .sale-desc{font-size:12.5px;font-weight:700;color:var(--ink);line-height:1.4;}
+  .sale-desc .muted{color:var(--ink-soft);font-weight:600;}
+  .sale-amt{font-weight:800;font-size:14px;white-space:nowrap;}
+  .badge{align-self:flex-start;font-size:11px;font-weight:800;padding:4px 10px;border-radius:99px;display:inline-flex;gap:5px;align-items:center;}
+  .badge.paid{background:var(--success-wash);color:var(--success);}
+  .badge.due{background:var(--gold-wash);color:var(--gold);}
+  .badge.free{background:var(--info-wash);color:var(--info);}
+  .badge.cancel{background:var(--danger-wash);color:var(--danger);}
+
+  /* ===== DESKTOP POS ===== */
+  .browser{
+    width:100%;background:var(--charcoal);border-radius:18px;overflow:hidden;
+    box-shadow:0 30px 60px -24px rgba(20,15,10,.55);
+  }
+  .browser-bar{display:flex;align-items:center;gap:8px;padding:12px 16px;background:var(--charcoal-2);}
+  .traffic{display:flex;gap:6px;}
+  .traffic i{width:10px;height:10px;border-radius:99px;background:#4B494E;}
+  .browser-url{
+    margin-left:10px;background:#37353A;color:#B7B2AB;font-size:12px;font-weight:700;
+    padding:6px 14px;border-radius:8px;flex:1;max-width:340px;
+  }
+  .pos-shell{display:flex;height:640px;background:var(--cream);}
+  .pos-sidebar{width:84px;flex:none;background:var(--charcoal);display:flex;flex-direction:column;align-items:center;padding:22px 0;gap:6px;}
+  .pos-mark{width:38px;height:38px;border-radius:11px;background:var(--orange);color:#fff;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;margin-bottom:20px;}
+  .pos-nav-item{
+    width:64px;padding:11px 4px;border-radius:12px;display:flex;flex-direction:column;align-items:center;gap:5px;
+    color:#9C978F;font-size:10px;font-weight:800;
+  }
+  .pos-nav-item .ic{font-size:18px;}
+  .pos-nav-item.active{background:rgba(232,89,12,.16);color:var(--orange);}
+  .pos-nav-item.manage{margin-top:auto;color:#726D66;}
+
+  .pos-main{flex:1;display:flex;flex-direction:column;min-width:0;}
+  .pos-topbar{
+    display:flex;align-items:center;gap:14px;padding:16px 22px;border-bottom:1px solid var(--line);background:var(--white);
+  }
+  .pos-search{
+    flex:1;background:var(--cream);border:1px solid var(--line);border-radius:11px;padding:10px 14px;font-size:13px;color:var(--ink-soft);font-weight:700;
+  }
+  .pos-outlet{font-size:12px;font-weight:800;color:var(--ink-soft);background:var(--cream);border:1px solid var(--line);padding:9px 13px;border-radius:11px;white-space:nowrap;}
+  .pos-cashier{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:800;}
+  .pos-cashier .av{width:28px;height:28px;border-radius:99px;background:var(--orange-wash);color:var(--orange-dark);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;}
+
+  .pos-body{flex:1;display:flex;min-height:0;}
+  .pos-catalog{flex:1;padding:18px 20px;overflow:hidden;display:flex;flex-direction:column;gap:14px;}
+  .pos-chips{display:flex;gap:8px;flex-wrap:wrap;}
+  .chip{font-size:12px;font-weight:800;padding:7px 14px;border-radius:99px;background:var(--white);border:1px solid var(--line);color:var(--ink-soft);}
+  .chip.on{background:var(--ink);color:#fff;border-color:var(--ink);}
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+  .prod{background:var(--white);border:1px solid var(--line);border-radius:14px;padding:10px;display:flex;flex-direction:column;gap:6px;}
+  .prod-thumb{height:64px;border-radius:9px;background:linear-gradient(135deg,#F3D9C4,#EAC5A6);display:flex;align-items:center;justify-content:center;font-size:22px;}
+  .prod-name{font-size:12px;font-weight:800;line-height:1.25;}
+  .prod-stock{font-size:10.5px;color:var(--success);font-weight:800;}
+  .prod-price{font-size:13px;font-weight:800;color:var(--orange-dark);}
+
+  .pos-ticket{
+    width:328px;flex:none;background:var(--white);border-left:1px solid var(--line);display:flex;flex-direction:column;
+  }
+  .ticket-head{padding:16px 18px 10px;border-bottom:1px solid var(--line);}
+  .ticket-head .who{font-size:12px;color:var(--ink-soft);font-weight:700;}
+  .ticket-head .name{font-size:14px;font-weight:800;}
+  .ticket-lines{flex:1;padding:12px 18px;display:flex;flex-direction:column;gap:12px;overflow:hidden;}
+  .tline{display:flex;justify-content:space-between;gap:8px;font-size:12.5px;}
+  .tline .l{font-weight:700;}
+  .tline .l .qt{color:var(--ink-soft);font-weight:600;}
+  .tline .r{font-weight:800;white-space:nowrap;}
+  .ticket-pay{padding:14px 18px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:10px;}
+  .payrow{display:flex;justify-content:space-between;font-size:12.5px;font-weight:700;color:var(--ink-soft);}
+  .payrow.total{font-size:16px;font-weight:800;color:var(--ink);}
+  .pay-methods{display:flex;gap:8px;}
+  .pm{flex:1;text-align:center;font-size:11px;font-weight:800;padding:9px 4px;border-radius:10px;border:1.5px solid var(--line);color:var(--ink-soft);}
+  .pm.on{border-color:var(--orange);color:var(--orange-dark);background:var(--orange-wash);}
+  .pos-validate{background:var(--orange);color:#fff;text-align:center;padding:13px;border-radius:12px;font-weight:800;font-size:13.5px;}
+
+  /* notes */
+  .why{max-width:1180px;margin:70px auto 0;background:var(--white);border:1px solid var(--line);border-radius:20px;padding:28px 30px;}
+  .why h2{font-size:17px;margin:0 0 14px;}
+  .why-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;}
+  .why-item{font-size:13px;line-height:1.55;color:var(--ink-soft);}
+  .why-item b{display:block;color:var(--ink);font-size:13.5px;margin-bottom:3px;}
+
+  .swatches{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;}
+  .sw{display:flex;align-items:center;gap:8px;font-size:11.5px;font-weight:700;color:var(--ink-soft);background:var(--cream);border:1px solid var(--line);padding:6px 10px 6px 6px;border-radius:99px;}
+  .sw i{width:20px;height:20px;border-radius:6px;display:block;}
+</style>
+</head>
+<body>
+
+  <div class="page-head">
+    <span class="eyebrow">● Maquette non-interactive — pour validation avant développement</span>
+    <h1>Ikoma Stock — mobile vendeur &amp; caisse bureau</h1>
+    <p class="sub">Même moteur, deux usages différents : sur mobile, une question par écran pour un vendeur debout, au comptoir, souvent peu à l'aise avec l'écrit. Sur bureau, une vraie caisse — tout visible en même temps, comme un point de vente professionnel classique.</p>
+    <div class="swatches">
+      <span class="sw"><i style="background:#E8590C"></i>Orange Ikoma — action</span>
+      <span class="sw"><i style="background:#1F8A55"></i>Vert — payé / livré</span>
+      <span class="sw"><i style="background:#B9790A"></i>Or — reste à payer</span>
+      <span class="sw"><i style="background:#2454A8"></i>Bleu — info seulement</span>
+      <span class="sw"><i style="background:#201F22"></i>Charbon — espace bureau</span>
+    </div>
+    <div class="jump">
+      <a href="#mobile">↓ Voir mobile vendeur</a>
+      <a href="#desktop">↓ Voir bureau / caisse</a>
+      <a href="#why">↓ Pourquoi ces choix</a>
+    </div>
+  </div>
+
+  <!-- ===================== MOBILE ===================== -->
+  <section class="block" id="mobile">
+    <div class="block-head">
+      <div>
+        <h2>📱 Mobile — le vendeur au comptoir</h2>
+        <p>Une seule couleur d'action (orange), un seul geste à la fois, du texte humain plutôt que des mots techniques.</p>
+      </div>
+      <span class="tag">3 écrans clés</span>
+    </div>
+
+    <div class="phones">
+
+      <!-- ACCUEIL -->
+      <div class="phone-col">
+        <div class="phone">
+          <div class="notch"></div>
+          <div class="app-header">
+            <div class="brand"><div class="brand-mark">IK</div><div class="brand-name">Ikoma</div></div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span class="role-pill">Vendeur</span>
+              <span class="header-icons">🔔</span>
+            </div>
+          </div>
+          <div class="app-body">
+            <div class="cta-row">
+              <div class="cta primary"><div class="ic">🛒</div>Vendre<span class="chev">›</span></div>
+              <div class="cta secondary"><div class="ic">💰</div>Encaisser un paiement<span class="chev">›</span></div>
+              <div class="cta secondary"><div class="ic">📦</div>Livrer un client<span class="chev">›</span></div>
+            </div>
+            <div class="section-label">Aujourd'hui</div>
+            <div class="urgent-list">
+              <div class="urgent-item"><span class="dot gold"></span><span class="msg">3 clients doivent encore payer</span><span class="amt">45 000 F</span></div>
+              <div class="urgent-item"><span class="dot info"></span><span class="msg">2 commandes à livrer</span><span class="amt">›</span></div>
+              <div class="urgent-item"><span class="dot danger"></span><span class="msg">1 produit presque épuisé</span><span class="amt">›</span></div>
+            </div>
+          </div>
+          <div class="bottom-nav">
+            <div class="nav-item active"><span class="dot-ic">🏠</span>Accueil</div>
+            <div class="nav-item"><span class="dot-ic">🛒</span>Vendre</div>
+            <div class="nav-item"><span class="dot-ic">💰</span>Paiements</div>
+            <div class="nav-item"><span class="dot-ic">👥</span>Clients</div>
+          </div>
+        </div>
+        <p class="phone-caption"><b>Accueil.</b> 3 boutons = les 3 gestes du métier. Le reste de la journée tient en 3 phrases, pas en 8 indicateurs. Le badge « Vendeur » en haut rappelle que l'espace Gestion est ailleurs.</p>
+      </div>
+
+      <!-- VENTE : ecran paiement -->
+      <div class="phone-col">
+        <div class="phone">
+          <div class="notch"></div>
+          <div class="app-header">
+            <div class="brand"><div class="brand-mark">IK</div><div class="brand-name">Vendre</div></div>
+            <span class="header-icons">✕</span>
+          </div>
+          <div class="app-body">
+            <div class="step-meta">
+              <span class="lbl">Étape 2 sur 4</span>
+              <div class="step-dots"><i class="on"></i><i class="on"></i><i></i><i></i></div>
+            </div>
+            <div class="question">Le client paie comment ?</div>
+            <div class="opt sel"><span class="radio"></span>💵 Tout maintenant, espèces</div>
+            <div class="opt"><span class="radio"></span>📱 Tout maintenant, Mobile Money</div>
+            <div class="opt"><span class="radio"></span>🤝 Il paiera plus tard</div>
+            <div class="section-label" style="margin-top:8px;">1 barre de fer</div>
+          </div>
+          <div class="cart-foot">
+            <div class="totrow"><span>Total à payer</span><b>25 000 F</b></div>
+            <div class="btn-continue">Confirmer le paiement</div>
+          </div>
+        </div>
+        <p class="phone-caption"><b>Vente — écran unique par question.</b> Pas de « Suivant » générique : le bouton dit ce qui va se passer. La remise n'apparaît pas ici pour un vendeur simple (réservée à l'espace Gestion).</p>
+      </div>
+
+      <!-- HISTORIQUE -->
+      <div class="phone-col">
+        <div class="phone">
+          <div class="notch"></div>
+          <div class="app-header">
+            <div class="brand"><div class="brand-mark">IK</div><div class="brand-name">Ventes</div></div>
+            <span class="header-icons">🔎</span>
+          </div>
+          <div class="app-body">
+            <div class="section-label">Historique</div>
+            <div class="sale-card">
+              <div class="sale-top">
+                <div class="sale-desc">Aujourd'hui à 16h08<br><span class="muted">Client de passage</span></div>
+                <div class="sale-amt">50 000 F</div>
+              </div>
+              <span class="badge paid">✅ Payé et livré</span>
+            </div>
+            <div class="sale-card">
+              <div class="sale-top">
+                <div class="sale-desc">Aujourd'hui à 15h40<br><span class="muted">Awa Koné</span></div>
+                <div class="sale-amt">75 000 F</div>
+              </div>
+              <span class="badge due">💰 Reste 25 000 F</span>
+            </div>
+            <div class="sale-card">
+              <div class="sale-top">
+                <div class="sale-desc">Hier à 11h02<br><span class="muted">Client de passage</span></div>
+                <div class="sale-amt">25 000 F</div>
+              </div>
+              <span class="badge free">🎁 Offert — remise autorisée</span>
+            </div>
+          </div>
+          <div class="bottom-nav">
+            <div class="nav-item"><span class="dot-ic">🏠</span>Accueil</div>
+            <div class="nav-item active"><span class="dot-ic">🛒</span>Vendre</div>
+            <div class="nav-item"><span class="dot-ic">💰</span>Paiements</div>
+            <div class="nav-item"><span class="dot-ic">👥</span>Clients</div>
+          </div>
+        </div>
+        <p class="phone-caption"><b>Historique.</b> Une phrase humaine + un badge d'état réel, jamais « Validée » seule ni le numéro technique en premier. Le cas remise totale s'affiche « Offert », plus jamais « Non payée ».</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===================== DESKTOP ===================== -->
+  <section class="block" id="desktop">
+    <div class="block-head">
+      <div>
+        <h2>🖥️ Bureau — caisse du comptoir</h2>
+        <p>Sur bureau, l'écran est grand et l'utilisateur est souvent assis derrière un comptoir : tout est visible en une fois, comme une vraie caisse, pas un parcours mobile agrandi.</p>
+      </div>
+      <span class="tag">Vue caisse complète</span>
+    </div>
+
+    <div class="browser">
+      <div class="browser-bar">
+        <div class="traffic"><i></i><i></i><i></i></div>
+        <div class="browser-url">caisse.ikoma.app</div>
+      </div>
+      <div class="pos-shell">
+        <div class="pos-sidebar">
+          <div class="pos-mark">IK</div>
+          <div class="pos-nav-item active"><span class="ic">🏠</span>Accueil</div>
+          <div class="pos-nav-item"><span class="ic">🛒</span>Vendre</div>
+          <div class="pos-nav-item"><span class="ic">💰</span>Paiements</div>
+          <div class="pos-nav-item"><span class="ic">👥</span>Clients</div>
+          <div class="pos-nav-item manage"><span class="ic">⚙️</span>Gestion</div>
+        </div>
+
+        <div class="pos-main">
+          <div class="pos-topbar">
+            <div class="pos-outlet">📍 Ikoma POS</div>
+            <div class="pos-search">🔎 Rechercher un produit, une référence…</div>
+            <div class="pos-cashier"><div class="av">A</div>Aïcha</div>
+          </div>
+
+          <div class="pos-body">
+            <div class="pos-catalog">
+              <div class="pos-chips">
+                <span class="chip on">Toutes</span>
+                <span class="chip">Fer &amp; acier</span>
+                <span class="chip">Ciment</span>
+                <span class="chip">Bois</span>
+                <span class="chip">Quincaillerie</span>
+              </div>
+              <div class="grid">
+                <div class="prod"><div class="prod-thumb">🧱</div><div class="prod-name">Barre de fer 12</div><div class="prod-stock">250 barres</div><div class="prod-price">25 000 F</div></div>
+                <div class="prod"><div class="prod-thumb">🏗️</div><div class="prod-name">Sac de ciment</div><div class="prod-stock">80 sacs</div><div class="prod-price">6 500 F</div></div>
+                <div class="prod"><div class="prod-thumb">🪵</div><div class="prod-name">Planche bois</div><div class="prod-stock">120 pièces</div><div class="prod-price">4 000 F</div></div>
+                <div class="prod"><div class="prod-thumb">🔩</div><div class="prod-name">Boulons 10mm</div><div class="prod-stock">54 paquets</div><div class="prod-price">1 500 F</div></div>
+                <div class="prod"><div class="prod-thumb">🧱</div><div class="prod-name">Barre de fer 8</div><div class="prod-stock">190 barres</div><div class="prod-price">18 000 F</div></div>
+                <div class="prod"><div class="prod-thumb">🪣</div><div class="prod-name">Peinture 5L</div><div class="prod-stock">12 pots</div><div class="prod-price">12 000 F</div></div>
+                <div class="prod"><div class="prod-thumb">🧰</div><div class="prod-name">Fil de fer</div><div class="prod-stock">30 rouleaux</div><div class="prod-price">3 500 F</div></div>
+                <div class="prod"><div class="prod-thumb">🔧</div><div class="prod-name">Clous 5cm</div><div class="prod-stock">4 kg</div><div class="prod-price">2 000 F</div></div>
+              </div>
+            </div>
+
+            <div class="pos-ticket">
+              <div class="ticket-head">
+                <div class="who">Client</div>
+                <div class="name">Client de passage</div>
+              </div>
+              <div class="ticket-lines">
+                <div class="tline"><div class="l">Barre de fer 12 <span class="qt">× 3</span></div><div class="r">75 000 F</div></div>
+                <div class="tline"><div class="l">Sac de ciment <span class="qt">× 2</span></div><div class="r">13 000 F</div></div>
+              </div>
+              <div class="ticket-pay">
+                <div class="payrow"><span>Sous-total</span><span>88 000 F</span></div>
+                <div class="payrow total"><span>Total</span><span>88 000 F</span></div>
+                <div class="pay-methods">
+                  <div class="pm on">Espèces</div>
+                  <div class="pm">Mobile Money</div>
+                  <div class="pm">Plus tard</div>
+                </div>
+                <div class="pos-validate">Confirmer la vente</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="phone-caption" style="margin-top:14px;max-width:640px;">Le catalogue et le ticket sont visibles ensemble en permanence — c'est ce qu'attend quelqu'un qui a déjà utilisé une caisse. « Gestion » (stock, catégories, remises, clôtures) est isolé en bas de la barre latérale, jamais mélangé aux gestes du quotidien.</p>
+  </section>
+
+  <!-- ===================== WHY ===================== -->
+  <section class="why" id="why">
+    <h2>Vérification d'intuitivité — ce que chaque choix protège</h2>
+    <div class="why-grid">
+      <div class="why-item"><b>Une seule couleur d'action</b>L'orange n'est utilisé QUE pour l'action principale à faire. S'il y a de l'orange partout, l'œil ne sait plus où regarder.</div>
+      <div class="why-item"><b>Une question par écran mobile</b>Le vendeur ne retient jamais deux décisions à la fois. Le bouton du bas répond toujours à la question du haut.</div>
+      <div class="why-item"><b>Verbes, jamais noms de table</b>« Vendre », « Encaisser », « Livrer » — jamais « Nouvelle vente », « Transactions », « Module ventes ».</div>
+      <div class="why-item"><b>Le bureau n'est pas un mobile étiré</b>Sur bureau, l'utilisateur voit tout en même temps : catalogue + ticket + paiement, comme une vraie caisse — pas un parcours à étapes agrandi.</div>
+      <div class="why-item"><b>Le statut dit la vérité</b>Jamais « Validée » seule. Toujours ce qui s'est réellement passé : payé, à livrer, offert, en retard.</div>
+      <div class="why-item"><b>Gestion à part, toujours</b>Catégories, remises, export, suppression : jamais au même niveau visuel qu'une vente normale.</div>
+    </div>
+  </section>
+
+</body>
+</html>

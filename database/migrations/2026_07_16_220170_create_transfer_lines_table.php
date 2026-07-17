@@ -22,7 +22,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        DB::statement('ALTER TABLE transfer_lines ADD CONSTRAINT chk_transfer_lines_quantity CHECK (requested_quantity > 0)');
+        if (DB::getDriverName() !== 'sqlite') { DB::statement('ALTER TABLE transfer_lines ADD CONSTRAINT chk_transfer_lines_quantity CHECK (requested_quantity > 0)'); }
     }
 
     public function down(): void

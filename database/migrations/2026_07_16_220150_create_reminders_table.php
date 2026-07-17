@@ -27,7 +27,7 @@ return new class extends Migration
         });
 
         $channels = implode(',', array_map(fn ($v) => "'{$v}'", ReminderChannel::values()));
-        DB::statement("ALTER TABLE reminders ADD CONSTRAINT chk_reminders_channel CHECK (channel IN ({$channels}))");
+        if (DB::getDriverName() !== 'sqlite') { DB::statement("ALTER TABLE reminders ADD CONSTRAINT chk_reminders_channel CHECK (channel IN ({$channels}))"); }
     }
 
     public function down(): void

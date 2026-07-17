@@ -18,7 +18,7 @@ use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
-#[Layout('layouts.app')]
+#[Layout('layouts.app', ['bareDesktop' => true])]
 class NewSale extends Component
 {
     public int $step = 1;
@@ -44,6 +44,12 @@ class NewSale extends Component
     public string $discountPercentage = '';
 
     public ?Invoice $invoice = null;
+
+    // ── Écran 2 : mode de paiement choisi par le vendeur
+    public string $paymentChoice = '';
+
+    // ── Montant reçu maintenant (en francs, saisie libre) pour le mode "later"
+    public string $partialAmountInput = '';
 
     public function mount(): void
     {
@@ -129,7 +135,7 @@ class NewSale extends Component
     #[On('cart.checkout')]
     public function goToPaymentStep(): void
     {
-        $this->step = 3;
+        $this->step = 2;
     }
 
     public function selectCustomer(int $customerId): void
@@ -157,13 +163,66 @@ class NewSale extends Component
         $this->customerId = null;
     }
 
+    public function updatedPaymentChoice(): void
+    {
+        $this->partialAmountInput = '';
+        $this->syncPaymentLines();
+    }
+
+    public function updatedDeliveryChoice(): void
+    {
+        // I4 : si livraison différée et pas de client, préparer le mode "passage"
+        if ($this->deliveryChoice === 'later' && ! $this->hasIdentifiedCustomer()) {
+            $this->isPassingCustomer = true;
+        }
+    }
+
+    public function updatedPartialAmountInput(): void
+    {
+        if ($this->paymentChoice === 'later') {
+            $this->syncPaymentLines();
+        }
+    }
+
     public function nextStep(): void
     {
+        // I3 : si reste > 0 et aucun client identifié, bloquer au passage de l'étape 3
+        if ($this->step === 3) {
+            if ($this->remainingAmount > 0 && ! $this->hasIdentifiedCustomer()) {
+                $this->addError('customer', 'Ce client n\'a pas tout payé. Ajoute son numéro pour suivre ce qu\'il doit.');
+
+                return;
+            }
+        }
+
+        // I4 : si livraison différée et aucun client identifié, bloquer au passage de l'étape 4
+        if ($this->step === 4) {
+            if ($this->deliveryChoice === 'later' && ! $this->hasIdentifiedCustomer()) {
+                $this->addError('delivery', 'Pour livrer plus tard, ajoute le numéro du client pour pouvoir le retrouver.');
+
+                return;
+            }
+        }
+
+        // Depuis l'étape 2, sauter l'étape 3 (client) si rien n'est dû
+        if ($this->step === 2 && $this->remainingAmount === 0) {
+            $this->step = 4;
+
+            return;
+        }
+
         $this->step = min(5, $this->step + 1);
     }
 
     public function previousStep(): void
     {
+        // Depuis l'étape 4, sauter l'étape 3 en arrière si rien n'était dû
+        if ($this->step === 4 && $this->remainingAmount === 0) {
+            $this->step = 2;
+
+            return;
+        }
+
         $this->step = max(1, $this->step - 1);
     }
 
@@ -181,6 +240,11 @@ class NewSale extends Component
     public function getCartTotalProperty(): int
     {
         return collect($this->cart)->sum(fn (array $line) => $line['unit_price'] * $line['quantity']);
+    }
+
+    public function getNetTotalProperty(): int
+    {
+        return max(0, $this->cartTotal - $this->discountTotal);
     }
 
     public function getCanApplyDiscountProperty(): bool
@@ -215,7 +279,7 @@ class NewSale extends Component
 
     public function getRemainingAmountProperty(): int
     {
-        return max(0, $this->cartTotal - $this->discountTotal - $this->paidAmount);
+        return max(0, $this->netTotal - $this->paidAmount);
     }
 
     public function validateSale(): void
@@ -306,5 +370,32 @@ class NewSale extends Component
     public function render()
     {
         return view('livewire.sales.new-sale');
+    }
+
+    // ── Privé ──────────────────────────────────────────────────────────────
+
+    public function getHasIdentifiedCustomerProperty(): bool
+    {
+        return $this->customerId !== null
+            || ($this->isPassingCustomer && ! empty($this->passingPhone));
+    }
+
+    private function hasIdentifiedCustomer(): bool
+    {
+        return $this->hasIdentifiedCustomer;
+    }
+
+    private function syncPaymentLines(): void
+    {
+        $netFrancs = $this->netTotal / 100;
+
+        $this->paymentLines = match ($this->paymentChoice) {
+            'cash_now'   => [['method' => PaymentMethod::CASH->value, 'amount' => $netFrancs]],
+            'mobile_now' => [['method' => PaymentMethod::MOBILE_MONEY->value, 'amount' => $netFrancs]],
+            'later'      => (float) $this->partialAmountInput > 0
+                ? [['method' => PaymentMethod::CASH->value, 'amount' => (float) $this->partialAmountInput]]
+                : [],
+            default      => [],
+        };
     }
 }

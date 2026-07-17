@@ -24,7 +24,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        DB::statement('ALTER TABLE sale_lines ADD CONSTRAINT chk_sale_lines_quantity CHECK (quantity > 0)');
+        if (DB::getDriverName() !== 'sqlite') { DB::statement('ALTER TABLE sale_lines ADD CONSTRAINT chk_sale_lines_quantity CHECK (quantity > 0)'); }
     }
 
     public function down(): void

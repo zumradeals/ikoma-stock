@@ -29,7 +29,7 @@ return new class extends Migration
         });
 
         $methods = implode(',', array_map(fn ($v) => "'{$v}'", PaymentMethod::values()));
-        DB::statement("ALTER TABLE payments ADD CONSTRAINT chk_payments_method CHECK (method IN ({$methods}))");
+        if (DB::getDriverName() !== 'sqlite') { DB::statement("ALTER TABLE payments ADD CONSTRAINT chk_payments_method CHECK (method IN ({$methods}))"); }
     }
 
     public function down(): void

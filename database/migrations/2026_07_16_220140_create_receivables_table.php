@@ -27,10 +27,10 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        DB::statement('ALTER TABLE receivables ADD CONSTRAINT chk_receivables_balance_due CHECK (balance_due >= 0)');
+        if (DB::getDriverName() !== 'sqlite') { DB::statement('ALTER TABLE receivables ADD CONSTRAINT chk_receivables_balance_due CHECK (balance_due >= 0)'); }
 
         $statuses = implode(',', array_map(fn ($v) => "'{$v}'", ReceivableStatus::values()));
-        DB::statement("ALTER TABLE receivables ADD CONSTRAINT chk_receivables_status CHECK (status IN ({$statuses}))");
+        if (DB::getDriverName() !== 'sqlite') { DB::statement("ALTER TABLE receivables ADD CONSTRAINT chk_receivables_status CHECK (status IN ({$statuses}))"); }
     }
 
     public function down(): void

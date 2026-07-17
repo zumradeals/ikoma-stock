@@ -11,10 +11,20 @@
 
         <title>IKOMA STOCK</title>
 
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         @livewireStyles
     </head>
-    <body class="font-sans text-gray-900 antialiased">
+    @php
+        $brandHex  = '#ea580c';
+        $brandDark = brand_dark($brandHex);
+        $brandWash = brand_wash($brandHex);
+    @endphp
+    <body class="font-sans text-gray-900 antialiased"
+          style="--brand:{{ $brandHex }};--brand-dark:{{ $brandDark }};--brand-wash:{{ $brandWash }};">
         <div class="min-h-screen flex flex-col sm:justify-center items-center pt-10 sm:pt-0 px-4 bg-gradient-to-b from-orange-50 via-white to-white">
             <div class="text-center">
                 <a href="/" wire:navigate class="inline-block">

@@ -33,7 +33,7 @@ return new class extends Migration
         });
 
         $statuses = implode(',', array_map(fn ($v) => "'{$v}'", TransferStatus::values()));
-        DB::statement("ALTER TABLE transfers ADD CONSTRAINT chk_transfers_status CHECK (status IN ({$statuses}))");
+        if (DB::getDriverName() !== 'sqlite') { DB::statement("ALTER TABLE transfers ADD CONSTRAINT chk_transfers_status CHECK (status IN ({$statuses}))"); }
     }
 
     public function down(): void

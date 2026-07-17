@@ -4,12 +4,24 @@
     @endif
     @error('form') <p class="text-sm text-red-600 bg-red-50 rounded-lg p-3">{{ $message }}</p> @enderror
 
-    <div class="flex items-center justify-between">
-        <h1 class="text-base font-semibold text-gray-900">{{ $sale->number }}</h1>
-        <x-status-badge
-            :status="match($sale->status->value) { 'VALIDATED' => 'green', 'CANCELLED' => 'red', default => 'gray' }"
-            :label="$sale->status->label()"
-        />
+    <div class="flex items-start justify-between gap-2">
+        <div>
+            <h1 class="text-base font-semibold text-gray-900">{{ \App\Support\HumanDate::format($sale->created_at) }}</h1>
+            <p class="text-xs text-gray-400">{{ $sale->number }}</p>
+        </div>
+        @if ($sale->invoice)
+            <x-ikoma.status-badge :status="\App\Support\SaleStatusPresenter::resolve(
+                $sale->invoice->payment_status->value,
+                $sale->invoice->delivery_status->value,
+                $sale->invoice->total_amount,
+                $sale->status->value === 'CANCELLED',
+            )" />
+        @else
+            <x-status-badge
+                :status="match($sale->status->value) { 'VALIDATED' => 'green', 'CANCELLED' => 'red', default => 'gray' }"
+                :label="$sale->status->label()"
+            />
+        @endif
     </div>
 
     <div class="rounded-xl border border-gray-200 bg-white p-4 space-y-2">

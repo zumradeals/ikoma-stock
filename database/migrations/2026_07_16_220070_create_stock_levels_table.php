@@ -25,7 +25,7 @@ return new class extends Migration
         });
 
         $types = implode(',', array_map(fn ($v) => "'{$v}'", LocationType::values()));
-        DB::statement("ALTER TABLE stock_levels ADD CONSTRAINT chk_stock_levels_location_type CHECK (location_type IN ({$types}))");
+        if (DB::getDriverName() !== 'sqlite') { DB::statement("ALTER TABLE stock_levels ADD CONSTRAINT chk_stock_levels_location_type CHECK (location_type IN ({$types}))"); }
     }
 
     public function down(): void

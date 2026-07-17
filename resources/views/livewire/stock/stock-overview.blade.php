@@ -186,7 +186,8 @@
         @endforeach
     </div>
 
-    <div class="overflow-x-auto rounded-xl border border-gray-200 bg-white">
+    {{-- Tableau desktop (md+) — inchangé --}}
+    <div class="hidden md:block overflow-x-auto rounded-xl border border-gray-200 bg-white">
         <table class="min-w-full text-sm">
             <thead>
                 <tr class="border-b border-gray-100 text-left text-xs text-gray-400">
@@ -255,5 +256,80 @@
                 @endforelse
             </tbody>
         </table>
+    </div>
+
+    {{-- Liste de cartes mobile (< md) --}}
+    <div class="md:hidden space-y-3">
+        @forelse ($this->rows as $row)
+            <div wire:key="stock-card-{{ $row['product']->id }}" class="rounded-xl border border-line bg-white p-3">
+                <div class="flex items-start gap-3">
+                    {{-- Photo --}}
+                    <span class="h-14 w-14 shrink-0 rounded-xl bg-gray-100 overflow-hidden flex items-center justify-center">
+                        @if ($row['product']->image_path)
+                            <img src="{{ \Illuminate\Support\Facades\Storage::url($row['product']->image_path) }}" class="h-full w-full object-cover" alt="">
+                        @else
+                            <svg class="h-6 w-6 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3 4.5h18M3 4.5A2.25 2.25 0 015.25 2.25h13.5A2.25 2.25 0 0121 4.5m-18 0v15A2.25 2.25 0 005.25 21.75h13.5A2.25 2.25 0 0021 19.5v-15" />
+                            </svg>
+                        @endif
+                    </span>
+
+                    {{-- Nom + badge inactif --}}
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <span class="font-semibold text-ink text-sm leading-snug">{{ $row['product']->name }}</span>
+                            @unless ($row['product']->is_active)
+                                <x-status-badge status="red" label="Inactif" />
+                            @endunless
+                        </div>
+
+                        {{-- Stock par emplacement --}}
+                        <div class="mt-2 space-y-0.5">
+                            @foreach ($this->warehouses as $warehouse)
+                                @php $qty = $this->availableAt($row['byLocation'], 'WAREHOUSE:'.$warehouse->id); @endphp
+                                @if ($qty !== null)
+                                    <div class="flex items-center justify-between text-xs text-ink-soft">
+                                        <span>{{ $warehouse->name }}</span>
+                                        <span class="font-medium text-ink">{{ number_format($qty / 100, 0, ',', ' ') }}</span>
+                                    </div>
+                                @endif
+                            @endforeach
+                            @foreach ($this->outlets as $outlet)
+                                @php $qty = $this->availableAt($row['byLocation'], 'OUTLET:'.$outlet->id); @endphp
+                                @if ($qty !== null)
+                                    <div class="flex items-center justify-between text-xs text-ink-soft">
+                                        <span>{{ $outlet->name }}</span>
+                                        <span class="font-medium text-ink">{{ number_format($qty / 100, 0, ',', ' ') }}</span>
+                                    </div>
+                                @endif
+                            @endforeach
+                        </div>
+
+                        {{-- Total disponible --}}
+                        <div class="mt-2 flex items-center justify-between">
+                            <span class="text-xs text-ink-soft">Total disponible</span>
+                            <x-status-badge
+                                :status="$row['total'] <= ($row['product']->low_stock_threshold ?? 0) * 100 ? 'red' : 'green'"
+                                :label="number_format($row['total'] / 100, 0, ',', ' ')"
+                            />
+                        </div>
+
+                        {{-- Actions (canManageCatalog uniquement) --}}
+                        @if ($this->canManageCatalog)
+                            <div class="mt-3 flex gap-2">
+                                <x-ikoma.button-secondary wire:click="openProductForm({{ $row['product']->id }})" class="flex-1 justify-center text-xs py-1.5">
+                                    Éditer
+                                </x-ikoma.button-secondary>
+                                <button type="button" wire:click="requestToggleProduct({{ $row['product']->id }})" class="flex-1 rounded-lg border border-line text-ink-soft text-xs font-medium px-3 py-1.5 text-center">
+                                    {{ $row['product']->is_active ? 'Désactiver' : 'Réactiver' }}
+                                </button>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        @empty
+            <p class="text-center text-ink-soft text-sm py-10">Aucun produit trouvé.</p>
+        @endforelse
     </div>
 </div>

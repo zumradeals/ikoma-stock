@@ -103,4 +103,9 @@ Route::middleware('auth')->group(function () {
     });
 });
 
+// Route de preview design — locale uniquement, sans authentification
+if (app()->isLocal() || app()->environment('local', 'development')) {
+    Route::get('/design/preview', fn () => view('design.preview'))->name('design.preview');
+}
+
 require __DIR__.'/auth.php';

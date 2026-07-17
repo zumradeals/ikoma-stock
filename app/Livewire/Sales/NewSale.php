@@ -169,6 +169,14 @@ class NewSale extends Component
         $this->syncPaymentLines();
     }
 
+    public function updatedDeliveryChoice(): void
+    {
+        // I4 : si livraison différée et pas de client, préparer le mode "passage"
+        if ($this->deliveryChoice === 'later' && ! $this->hasIdentifiedCustomer()) {
+            $this->isPassingCustomer = true;
+        }
+    }
+
     public function updatedPartialAmountInput(): void
     {
         if ($this->paymentChoice === 'later') {

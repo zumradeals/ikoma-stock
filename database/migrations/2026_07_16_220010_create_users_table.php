@@ -35,7 +35,7 @@ return new class extends Migration
         });
 
         $roles = implode(',', array_map(fn ($v) => "'{$v}'", UserRole::values()));
-        DB::statement("ALTER TABLE users ADD CONSTRAINT chk_users_role CHECK (role IN ({$roles}))");
+        if (DB::getDriverName() !== 'sqlite') { DB::statement("ALTER TABLE users ADD CONSTRAINT chk_users_role CHECK (role IN ({$roles}))"); }
     }
 
     public function down(): void

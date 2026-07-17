@@ -34,13 +34,13 @@ return new class extends Migration
         });
 
         $customerTypes = implode(',', array_map(fn ($v) => "'{$v}'", CustomerType::values()));
-        DB::statement("ALTER TABLE sales ADD CONSTRAINT chk_sales_customer_type CHECK (customer_type IN ({$customerTypes}))");
+        if (DB::getDriverName() !== 'sqlite') { DB::statement("ALTER TABLE sales ADD CONSTRAINT chk_sales_customer_type CHECK (customer_type IN ({$customerTypes}))"); }
 
         $statuses = implode(',', array_map(fn ($v) => "'{$v}'", SaleStatus::values()));
-        DB::statement("ALTER TABLE sales ADD CONSTRAINT chk_sales_status CHECK (status IN ({$statuses}))");
+        if (DB::getDriverName() !== 'sqlite') { DB::statement("ALTER TABLE sales ADD CONSTRAINT chk_sales_status CHECK (status IN ({$statuses}))"); }
 
         $paymentMethods = implode(',', array_map(fn ($v) => "'{$v}'", PaymentMethod::values()));
-        DB::statement("ALTER TABLE sales ADD CONSTRAINT chk_sales_payment_method CHECK (payment_method_primary IS NULL OR payment_method_primary IN ({$paymentMethods}))");
+        if (DB::getDriverName() !== 'sqlite') { DB::statement("ALTER TABLE sales ADD CONSTRAINT chk_sales_payment_method CHECK (payment_method_primary IS NULL OR payment_method_primary IN ({$paymentMethods}))"); }
     }
 
     public function down(): void

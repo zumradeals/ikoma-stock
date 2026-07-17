@@ -32,14 +32,14 @@ return new class extends Migration
             $table->index(['company_id', 'issue_date']);
         });
 
-        DB::statement('ALTER TABLE invoices ADD CONSTRAINT chk_invoices_balance_due CHECK (balance_due >= 0)');
-        DB::statement('ALTER TABLE invoices ADD CONSTRAINT chk_invoices_paid_amount CHECK (paid_amount <= total_amount)');
+        if (DB::getDriverName() !== 'sqlite') { DB::statement('ALTER TABLE invoices ADD CONSTRAINT chk_invoices_balance_due CHECK (balance_due >= 0)'); }
+        if (DB::getDriverName() !== 'sqlite') { DB::statement('ALTER TABLE invoices ADD CONSTRAINT chk_invoices_paid_amount CHECK (paid_amount <= total_amount)'); }
 
         $paymentStatuses = implode(',', array_map(fn ($v) => "'{$v}'", InvoicePaymentStatus::values()));
-        DB::statement("ALTER TABLE invoices ADD CONSTRAINT chk_invoices_payment_status CHECK (payment_status IN ({$paymentStatuses}))");
+        if (DB::getDriverName() !== 'sqlite') { DB::statement("ALTER TABLE invoices ADD CONSTRAINT chk_invoices_payment_status CHECK (payment_status IN ({$paymentStatuses}))"); }
 
         $deliveryStatuses = implode(',', array_map(fn ($v) => "'{$v}'", InvoiceDeliveryStatus::values()));
-        DB::statement("ALTER TABLE invoices ADD CONSTRAINT chk_invoices_delivery_status CHECK (delivery_status IN ({$deliveryStatuses}))");
+        if (DB::getDriverName() !== 'sqlite') { DB::statement("ALTER TABLE invoices ADD CONSTRAINT chk_invoices_delivery_status CHECK (delivery_status IN ({$deliveryStatuses}))"); }
     }
 
     public function down(): void

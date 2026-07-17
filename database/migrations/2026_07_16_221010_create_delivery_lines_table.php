@@ -22,7 +22,7 @@ return new class extends Migration
             $table->timestamp('created_at')->useCurrent();
         });
 
-        DB::statement('ALTER TABLE delivery_lines ADD CONSTRAINT chk_delivery_lines_quantity CHECK (quantity_delivered > 0)');
+        if (DB::getDriverName() !== 'sqlite') { DB::statement('ALTER TABLE delivery_lines ADD CONSTRAINT chk_delivery_lines_quantity CHECK (quantity_delivered > 0)'); }
     }
 
     public function down(): void

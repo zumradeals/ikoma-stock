@@ -31,7 +31,7 @@ return new class extends Migration
         });
 
         $units = implode(',', array_map(fn ($v) => "'{$v}'", ProductUnit::values()));
-        DB::statement("ALTER TABLE products ADD CONSTRAINT chk_products_unit CHECK (unit IN ({$units}))");
+        if (DB::getDriverName() !== 'sqlite') { DB::statement("ALTER TABLE products ADD CONSTRAINT chk_products_unit CHECK (unit IN ({$units}))"); }
     }
 
     public function down(): void

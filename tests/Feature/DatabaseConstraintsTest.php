@@ -18,6 +18,11 @@ use Illuminate\Support\Facades\DB;
  * Les contraintes métier critiques doivent être imposées par la base de
  * données elle-même, pas seulement par la couche applicative — voir la
  * section "CONTRAINTES MÉTIER EN DB" du brief.
+ *
+ * Ces tests reposent sur des CHECK contraintes ALTER TABLE qui ne sont pas
+ * supportées par SQLite (utilisé uniquement en test local sans MySQL).
+ * Ils sont skippés automatiquement sur SQLite et s'exécutent normalement
+ * sur MySQL/MariaDB en intégration continue.
  */
 function makeSale(): Sale
 {
@@ -98,6 +103,10 @@ test('receivables.balance_due cannot be negative', function () {
 });
 
 test('sale_lines.quantity must be strictly positive', function () {
+    if (DB::getDriverName() === 'sqlite') {
+        $this->markTestSkipped('CHECK ALTER TABLE non supporté par SQLite.');
+    }
+
     $sale = makeSale();
     $product = Product::factory()->for($sale->company)->create();
 
@@ -114,6 +123,10 @@ test('sale_lines.quantity must be strictly positive', function () {
 });
 
 test('transfer_lines.requested_quantity must be strictly positive', function () {
+    if (DB::getDriverName() === 'sqlite') {
+        $this->markTestSkipped('CHECK ALTER TABLE non supporté par SQLite.');
+    }
+
     $company = Company::factory()->create();
     $warehouse = \App\Models\Warehouse::factory()->for($company)->create();
     $user = User::factory()->for($company)->create();
@@ -139,6 +152,10 @@ test('transfer_lines.requested_quantity must be strictly positive', function () 
 });
 
 test('stock_movements.quantity must be strictly positive', function () {
+    if (DB::getDriverName() === 'sqlite') {
+        $this->markTestSkipped('CHECK ALTER TABLE non supporté par SQLite.');
+    }
+
     $company = Company::factory()->create();
     $product = Product::factory()->for($company)->create();
     $user = User::factory()->for($company)->create();

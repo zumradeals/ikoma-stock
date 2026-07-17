@@ -35,7 +35,7 @@ return new class extends Migration
         });
 
         $statuses = implode(',', array_map(fn ($v) => "'{$v}'", DailyClosingStatus::values()));
-        DB::statement("ALTER TABLE daily_closings ADD CONSTRAINT chk_daily_closings_status CHECK (status IN ({$statuses}))");
+        if (DB::getDriverName() !== 'sqlite') { DB::statement("ALTER TABLE daily_closings ADD CONSTRAINT chk_daily_closings_status CHECK (status IN ({$statuses}))"); }
     }
 
     public function down(): void

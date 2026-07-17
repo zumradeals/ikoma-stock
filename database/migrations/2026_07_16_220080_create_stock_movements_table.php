@@ -38,13 +38,13 @@ return new class extends Migration
         });
 
         $movementTypes = implode(',', array_map(fn ($v) => "'{$v}'", StockMovementType::values()));
-        DB::statement("ALTER TABLE stock_movements ADD CONSTRAINT chk_stock_movements_type CHECK (movement_type IN ({$movementTypes}))");
+        if (DB::getDriverName() !== 'sqlite') { DB::statement("ALTER TABLE stock_movements ADD CONSTRAINT chk_stock_movements_type CHECK (movement_type IN ({$movementTypes}))"); }
 
         $locationTypes = implode(',', array_map(fn ($v) => "'{$v}'", LocationType::values()));
-        DB::statement("ALTER TABLE stock_movements ADD CONSTRAINT chk_stock_movements_src_type CHECK (location_source_type IS NULL OR location_source_type IN ({$locationTypes}))");
-        DB::statement("ALTER TABLE stock_movements ADD CONSTRAINT chk_stock_movements_dst_type CHECK (location_destination_type IS NULL OR location_destination_type IN ({$locationTypes}))");
+        if (DB::getDriverName() !== 'sqlite') { DB::statement("ALTER TABLE stock_movements ADD CONSTRAINT chk_stock_movements_src_type CHECK (location_source_type IS NULL OR location_source_type IN ({$locationTypes}))"); }
+        if (DB::getDriverName() !== 'sqlite') { DB::statement("ALTER TABLE stock_movements ADD CONSTRAINT chk_stock_movements_dst_type CHECK (location_destination_type IS NULL OR location_destination_type IN ({$locationTypes}))"); }
 
-        DB::statement('ALTER TABLE stock_movements ADD CONSTRAINT chk_stock_movements_quantity CHECK (quantity > 0)');
+        if (DB::getDriverName() !== 'sqlite') { DB::statement('ALTER TABLE stock_movements ADD CONSTRAINT chk_stock_movements_quantity CHECK (quantity > 0)'); }
     }
 
     public function down(): void

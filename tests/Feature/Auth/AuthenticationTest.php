@@ -52,7 +52,7 @@ test('bottom navigation can be rendered', function () {
 
     $response
         ->assertOk()
-        ->assertSee('Ventes')
+        ->assertSee('Vendre')
         ->assertSee('Stock')
         ->assertSee('Clients');
 });

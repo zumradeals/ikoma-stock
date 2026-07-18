@@ -7,15 +7,15 @@ use App\Models\Invoice;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
-#[Layout('layouts.app')]
+#[Layout('layouts.app', ['bareDesktop' => true])]
 class PendingDeliveries extends Component
 {
-    public string $filter = 'all';
+    public string $filter = 'today';
 
     public function getInvoicesProperty()
     {
         return Invoice::query()
-            ->with(['sale.customer', 'sale.outlet'])
+            ->with(['sale.customer', 'sale.outlet', 'sale.saleLines'])
             ->whereNotIn('delivery_status', [InvoiceDeliveryStatus::DELIVERED->value, InvoiceDeliveryStatus::CANCELLED->value])
             ->when($this->filter === 'today', fn ($q) => $q->whereDate('due_date', now()->toDateString()))
             ->when($this->filter === 'overdue', fn ($q) => $q->whereDate('due_date', '<', now()->toDateString()))
@@ -24,21 +24,37 @@ class PendingDeliveries extends Component
             ->get();
     }
 
+    public function getOverdueCountProperty(): int
+    {
+        return Invoice::query()
+            ->whereNotIn('delivery_status', [InvoiceDeliveryStatus::DELIVERED->value, InvoiceDeliveryStatus::CANCELLED->value])
+            ->whereDate('due_date', '<', now()->toDateString())
+            ->count();
+    }
+
+    public function getTodayCountProperty(): int
+    {
+        return Invoice::query()
+            ->whereNotIn('delivery_status', [InvoiceDeliveryStatus::DELIVERED->value, InvoiceDeliveryStatus::CANCELLED->value])
+            ->whereDate('due_date', now()->toDateString())
+            ->count();
+    }
+
     public function status(Invoice $invoice): string
     {
         if (! $invoice->due_date) {
-            return 'gray';
+            return 'planifiee';
         }
 
         if ($invoice->due_date->isPast() && ! $invoice->due_date->isToday()) {
-            return 'red';
+            return 'retard';
         }
 
         if ($invoice->due_date->isToday()) {
-            return 'orange';
+            return 'aujourd_hui';
         }
 
-        return 'gray';
+        return 'planifiee';
     }
 
     public function render()

@@ -3,6 +3,34 @@
     <x-ikoma.desktop-sidebar active="stock" />
 </div>
 <div class="flex-1 lg:overflow-y-auto p-3 space-y-3">
+
+    {{-- ── Boutons d'action rapide ── --}}
+    <div class="grid grid-cols-3 gap-2">
+        <a href="{{ route('stock.entree') }}" wire:navigate
+           class="flex flex-col items-center gap-1.5 rounded-2xl bg-white border border-line px-2 py-3 text-center hover:border-brand/40 transition">
+            <span class="text-xl leading-none">📥</span>
+            <span class="text-[11px] font-extrabold text-ink leading-tight">Entrée de stock</span>
+        </a>
+        @if ($this->canManageCatalog)
+        <a href="{{ route('stock.ajuster') }}" wire:navigate
+           class="flex flex-col items-center gap-1.5 rounded-2xl bg-white border border-line px-2 py-3 text-center hover:border-brand/40 transition">
+            <span class="text-xl leading-none">✏️</span>
+            <span class="text-[11px] font-extrabold text-ink leading-tight">Corriger</span>
+        </a>
+        @else
+        <span class="flex flex-col items-center gap-1.5 rounded-2xl bg-cream border border-line px-2 py-3 text-center opacity-40 cursor-not-allowed">
+            <span class="text-xl leading-none">✏️</span>
+            <span class="text-[11px] font-extrabold text-ink-soft leading-tight">Corriger</span>
+        </span>
+        @endif
+        <a href="{{ route('stock.transfert') }}" wire:navigate
+           class="flex flex-col items-center gap-1.5 rounded-2xl bg-white border border-line px-2 py-3 text-center hover:border-brand/40 transition">
+            <span class="text-xl leading-none">🔄</span>
+            <span class="text-[11px] font-extrabold text-ink leading-tight">Transfert</span>
+        </a>
+    </div>
+
+    {{-- ── Barre de recherche + export ── --}}
     <div class="flex items-center gap-2">
         <input
             type="search"
@@ -24,7 +52,7 @@
             <button type="button" wire:click="openCategoryForm" class="flex-1 rounded-lg bg-gray-100 text-gray-700 text-xs font-medium px-3 py-2">
                 + Nouvelle catégorie
             </button>
-            <button type="button" wire:click="openProductForm" class="flex-1 rounded-lg bg-orange-600 text-white text-xs font-medium px-3 py-2">
+            <button type="button" wire:click="openProductForm" class="flex-1 rounded-lg bg-brand text-white text-xs font-medium px-3 py-2">
                 + Nouveau produit
             </button>
         </div>
@@ -175,16 +203,16 @@
     @endif
 
     <div class="flex gap-2 overflow-x-auto pb-1">
-        <button type="button" wire:click="$set('locationFilter', '')" class="shrink-0 rounded-full px-3 py-1.5 text-xs font-medium {{ $locationFilter === '' ? 'bg-orange-600 text-white' : 'bg-gray-100 text-gray-600' }}">
+        <button type="button" wire:click="$set('locationFilter', '')" class="shrink-0 rounded-full px-3 py-1.5 text-xs font-medium {{ $locationFilter === '' ? 'bg-brand text-white' : 'bg-gray-100 text-gray-600' }}">
             Tous les emplacements
         </button>
         @foreach ($this->warehouses as $warehouse)
-            <button type="button" wire:click="$set('locationFilter', 'WAREHOUSE:{{ $warehouse->id }}')" class="shrink-0 rounded-full px-3 py-1.5 text-xs font-medium {{ $locationFilter === 'WAREHOUSE:'.$warehouse->id ? 'bg-orange-600 text-white' : 'bg-gray-100 text-gray-600' }}">
+            <button type="button" wire:click="$set('locationFilter', 'WAREHOUSE:{{ $warehouse->id }}')" class="shrink-0 rounded-full px-3 py-1.5 text-xs font-medium {{ $locationFilter === 'WAREHOUSE:'.$warehouse->id ? 'bg-brand text-white' : 'bg-gray-100 text-gray-600' }}">
                 {{ $warehouse->name }}
             </button>
         @endforeach
         @foreach ($this->outlets as $outlet)
-            <button type="button" wire:click="$set('locationFilter', 'OUTLET:{{ $outlet->id }}')" class="shrink-0 rounded-full px-3 py-1.5 text-xs font-medium {{ $locationFilter === 'OUTLET:'.$outlet->id ? 'bg-orange-600 text-white' : 'bg-gray-100 text-gray-600' }}">
+            <button type="button" wire:click="$set('locationFilter', 'OUTLET:{{ $outlet->id }}')" class="shrink-0 rounded-full px-3 py-1.5 text-xs font-medium {{ $locationFilter === 'OUTLET:'.$outlet->id ? 'bg-brand text-white' : 'bg-gray-100 text-gray-600' }}">
                 {{ $outlet->name }}
             </button>
         @endforeach
@@ -239,10 +267,10 @@
                             <td class="px-3 py-2 text-gray-600">{{ $qty !== null ? number_format($qty / 100, 0, ',', ' ') : '—' }}</td>
                         @endforeach
                         <td class="px-3 py-2">
-                            <x-status-badge
-                                :status="$row['total'] <= ($row['product']->low_stock_threshold ?? 0) * 100 ? 'red' : 'green'"
-                                :label="number_format($row['total'] / 100, 0, ',', ' ')"
-                            />
+                            @php $isLow = $row['total'] <= ($row['product']->low_stock_threshold ?? 0) * 100; @endphp
+                            <span class="inline-flex items-center gap-1 rounded-pill px-2.5 py-1 text-[11px] font-extrabold {{ $isLow ? 'bg-danger-wash text-danger' : 'bg-success-wash text-success' }}">
+                                {{ $isLow ? 'Alerte' : 'OK' }} · {{ number_format($row['total'] / 100, 0, ',', ' ') }}
+                            </span>
                         </td>
                         @if ($this->canManageCatalog)
                             <td class="px-3 py-2 whitespace-nowrap">
@@ -310,12 +338,12 @@
                         </div>
 
                         {{-- Total disponible --}}
+                        @php $isLow = $row['total'] <= ($row['product']->low_stock_threshold ?? 0) * 100; @endphp
                         <div class="mt-2 flex items-center justify-between">
                             <span class="text-xs text-ink-soft">Total disponible</span>
-                            <x-status-badge
-                                :status="$row['total'] <= ($row['product']->low_stock_threshold ?? 0) * 100 ? 'red' : 'green'"
-                                :label="number_format($row['total'] / 100, 0, ',', ' ')"
-                            />
+                            <span class="inline-flex items-center gap-1 rounded-pill px-2.5 py-1 text-[11px] font-extrabold {{ $isLow ? 'bg-danger-wash text-danger' : 'bg-success-wash text-success' }}">
+                                {{ $isLow ? 'Alerte' : 'OK' }} · {{ number_format($row['total'] / 100, 0, ',', ' ') }}
+                            </span>
                         </div>
 
                         {{-- Actions (canManageCatalog uniquement) --}}

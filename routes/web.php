@@ -66,6 +66,11 @@ Route::middleware('auth')->group(function () {
         Route::get('/export', [StockController::class, 'exportPdf'])->name('stock.export');
         Route::middleware('role:ADMIN_COMPANY|WAREHOUSE_KEEPER')
             ->get('/correction', StockCorrection::class)->name('stock.correction');
+        // Raccourcis depuis les boutons rapides de StockOverview
+        Route::get('/entree', StockMovements::class)->name('stock.entree');
+        Route::middleware('role:ADMIN_COMPANY|WAREHOUSE_KEEPER')
+            ->get('/ajuster', StockCorrection::class)->name('stock.ajuster');
+        Route::get('/transfert', TransferList::class)->name('stock.transfert');
     });
 
     Route::prefix('clients')->group(function () {

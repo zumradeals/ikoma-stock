@@ -9,6 +9,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call(SuperAdminSeeder::class);
+        $this->call(IkomaDemoCompanySeeder::class);
 
         app(CompanyDemoSeeder::class)->run([
             'name' => 'Quincaillerie Koné',

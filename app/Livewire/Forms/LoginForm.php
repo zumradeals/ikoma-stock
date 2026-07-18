@@ -12,6 +12,8 @@ use Livewire\Form;
 
 class LoginForm extends Form
 {
+    public string $step = 'phone';
+
     #[Validate('required|string')]
     public string $phone = '';
 
@@ -20,6 +22,19 @@ class LoginForm extends Form
 
     #[Validate('boolean')]
     public bool $remember = true;
+
+    public function goToPinStep(): void
+    {
+        $this->validateOnly('phone');
+        $this->step = 'pin';
+    }
+
+    public function backToPhoneStep(): void
+    {
+        $this->step = 'phone';
+        $this->password = '';
+        $this->resetErrorBag();
+    }
 
     /**
      * Attempt to authenticate the request's credentials.
@@ -36,8 +51,10 @@ class LoginForm extends Form
         if (! Auth::attempt(['phone' => $this->phone, 'password' => $this->password], $this->remember)) {
             RateLimiter::hit($this->throttleKey());
 
+            $this->password = '';
+
             throw ValidationException::withMessages([
-                'form.phone' => trans('auth.failed'),
+                'form.password' => trans('auth.failed'),
             ]);
         }
 
@@ -58,7 +75,7 @@ class LoginForm extends Form
         $seconds = RateLimiter::availableIn($this->throttleKey());
 
         throw ValidationException::withMessages([
-            'form.phone' => trans('auth.throttle', [
+            'form.password' => trans('auth.throttle', [
                 'seconds' => $seconds,
                 'minutes' => ceil($seconds / 60),
             ]),

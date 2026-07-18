@@ -64,13 +64,13 @@ class CompanySettings extends Component
 
     public string $userName = '';
 
-    public string $userEmail = '';
+    public string $userPhone = '';
 
     public string $userRole = 'SELLER';
 
     public ?int $userOutletId = null;
 
-    public ?string $createdUserEmail = null;
+    public ?string $createdUserPhone = null;
 
     public ?string $createdUserPassword = null;
 
@@ -326,7 +326,7 @@ class CompanySettings extends Component
 
     public function openUserForm(?int $userId = null): void
     {
-        $this->reset(['userName', 'userEmail', 'userOutletId', 'createdUserEmail', 'createdUserPassword']);
+        $this->reset(['userName', 'userPhone', 'userOutletId', 'createdUserPhone', 'createdUserPassword']);
         $this->editingUserId = null;
         $this->userRole = 'SELLER';
 
@@ -336,7 +336,7 @@ class CompanySettings extends Component
 
             $this->editingUserId = $user->id;
             $this->userName = $user->name;
-            $this->userEmail = $user->email;
+            $this->userPhone = $user->phone ?? '';
             $this->userRole = $user->role->value;
             $this->userOutletId = $user->outlet_id;
         } else {
@@ -350,11 +350,13 @@ class CompanySettings extends Component
     {
         $companyId = $this->company->id;
 
+        $phone = preg_replace('/\s+/', '', trim($this->userPhone));
+
         $this->validate([
             'userName' => 'required|string|max:255',
-            'userEmail' => [
-                'required', 'email', 'max:255',
-                Rule::unique('users', 'email')->where('company_id', $companyId)->ignore($this->editingUserId),
+            'userPhone' => [
+                'required', 'string', 'max:20',
+                Rule::unique('users', 'phone')->ignore($this->editingUserId),
             ],
             'userRole' => Rule::in(array_map(fn (UserRole $r) => $r->value, $this->assignableRoles)),
             'userOutletId' => [
@@ -371,19 +373,20 @@ class CompanySettings extends Component
 
             $user->update([
                 'name' => $this->userName,
-                'email' => $this->userEmail,
+                'phone' => $phone,
                 'role' => UserRole::from($this->userRole),
                 'outlet_id' => $outletId,
             ]);
         } else {
             $this->authorize('create', User::class);
 
-            $password = Str::password(12);
+            $password = Str::random(6);
 
             User::create([
                 'company_id' => $companyId,
                 'name' => $this->userName,
-                'email' => $this->userEmail,
+                'phone' => $phone,
+                'email' => $phone . '@ikoma.local',
                 'password' => Hash::make($password),
                 'role' => UserRole::from($this->userRole),
                 'outlet_id' => $outletId,
@@ -391,7 +394,7 @@ class CompanySettings extends Component
                 'email_verified_at' => now(),
             ]);
 
-            $this->createdUserEmail = $this->userEmail;
+            $this->createdUserPhone = $phone;
             $this->createdUserPassword = $password;
         }
 

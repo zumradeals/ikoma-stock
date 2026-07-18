@@ -28,6 +28,9 @@ class LoginForm extends Form
      */
     public function authenticate(): void
     {
+        // Normalise avant rate-limit et tentative
+        $this->phone = preg_replace('/\s+/', '', $this->phone);
+
         $this->ensureIsNotRateLimited();
 
         if (! Auth::attempt(['phone' => $this->phone, 'password' => $this->password], $this->remember)) {

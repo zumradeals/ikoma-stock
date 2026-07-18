@@ -82,9 +82,9 @@
 
     @if ($createdUserPassword)
         <div class="rounded-xl border border-green-200 bg-green-50 p-3 text-sm text-green-800 space-y-1">
-            <p class="font-medium">Utilisateur créé.</p>
-            <p>Email : <span class="font-mono">{{ $createdUserEmail }}</span></p>
-            <p>Mot de passe : <span class="font-mono">{{ $createdUserPassword }}</span></p>
+            <p class="font-medium">Utilisateur créé — donne ces accès au vendeur :</p>
+            <p>Téléphone : <span class="font-mono font-bold">{{ $createdUserPhone }}</span></p>
+            <p>Code : <span class="font-mono font-bold">{{ $createdUserPassword }}</span></p>
         </div>
     @endif
 
@@ -106,10 +106,47 @@
                     <x-input-error :messages="$errors->get('userName')" class="mt-1" />
                 </div>
 
-                <div>
-                    <x-input-label value="Email" />
-                    <x-text-input wire:model="userEmail" type="email" class="block mt-1 w-full" />
-                    <x-input-error :messages="$errors->get('userEmail')" class="mt-1" />
+                <div x-data="{
+                    dial: '+225',
+                    countries: [
+                        {code:'CI', dial:'+225', name:'Côte d\'Ivoire'},
+                        {code:'SN', dial:'+221', name:'Sénégal'},
+                        {code:'ML', dial:'+223', name:'Mali'},
+                        {code:'BF', dial:'+226', name:'Burkina Faso'},
+                        {code:'GN', dial:'+224', name:'Guinée'},
+                        {code:'TG', dial:'+228', name:'Togo'},
+                        {code:'BJ', dial:'+229', name:'Bénin'},
+                        {code:'NE', dial:'+227', name:'Niger'},
+                        {code:'GH', dial:'+233', name:'Ghana'},
+                        {code:'NG', dial:'+234', name:'Nigeria'},
+                        {code:'CM', dial:'+237', name:'Cameroun'},
+                        {code:'FR', dial:'+33',  name:'France'},
+                        {code:'BE', dial:'+32',  name:'Belgique'},
+                    ],
+                    local: '',
+                    get full() { return this.dial + this.local.replace(/\s+/g,''); },
+                    sync() { $wire.set('userPhone', this.full); },
+                }" x-init="
+                    local = $wire.userPhone.replace(/^\+\d+/, '');
+                    countries.forEach(c => { if ($wire.userPhone.startsWith(c.dial)) dial = c.dial; });
+                ">
+                    <x-input-label value="Téléphone" />
+                    <div class="flex mt-1 gap-2">
+                        <select x-model="dial" @change="sync()" class="border-gray-300 focus:border-orange-500 focus:ring-orange-500 rounded-md shadow-sm text-sm w-36 flex-none">
+                            <template x-for="c in countries" :key="c.code">
+                                <option :value="c.dial" x-text="c.dial + ' ' + c.name" :selected="c.dial === dial"></option>
+                            </template>
+                        </select>
+                        <input
+                            x-model="local"
+                            @input="sync()"
+                            type="tel"
+                            inputmode="numeric"
+                            placeholder="0718713781"
+                            class="border-gray-300 focus:border-orange-500 focus:ring-orange-500 rounded-md shadow-sm block w-full text-sm"
+                        />
+                    </div>
+                    <x-input-error :messages="$errors->get('userPhone')" class="mt-1" />
                 </div>
 
                 <div>
@@ -151,7 +188,7 @@
                 <div class="flex items-center justify-between px-3 py-2.5" wire:key="user-{{ $user->id }}">
                     <div>
                         <p class="text-sm font-medium text-gray-900">{{ $user->name }}</p>
-                        <p class="text-xs text-gray-400">{{ $user->email }}</p>
+                        <p class="text-xs text-gray-400">{{ $user->phone ?? '—' }}</p>
                     </div>
                     <div class="flex items-center gap-2">
                         <x-status-badge status="gray" :label="$user->role->label()" />

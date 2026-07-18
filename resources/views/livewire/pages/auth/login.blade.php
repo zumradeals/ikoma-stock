@@ -32,20 +32,62 @@ new #[Layout('layouts.auth')] class extends Component
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
     <form wire:submit="login">
-        <!-- Téléphone -->
-        <div>
+        <!-- Téléphone avec sélecteur de pays -->
+        <div x-data="{
+            dial: '+225',
+            local: '',
+            countries: [
+                {code:'CI', dial:'+225', flag:'🇨🇮', name:'Côte d\'Ivoire'},
+                {code:'SN', dial:'+221', flag:'🇸🇳', name:'Sénégal'},
+                {code:'ML', dial:'+223', flag:'🇲🇱', name:'Mali'},
+                {code:'BF', dial:'+226', flag:'🇧🇫', name:'Burkina Faso'},
+                {code:'GN', dial:'+224', flag:'🇬🇳', name:'Guinée'},
+                {code:'TG', dial:'+228', flag:'🇹🇬', name:'Togo'},
+                {code:'BJ', dial:'+229', flag:'🇧🇯', name:'Bénin'},
+                {code:'NE', dial:'+227', flag:'🇳🇪', name:'Niger'},
+                {code:'GH', dial:'+233', flag:'🇬🇭', name:'Ghana'},
+                {code:'NG', dial:'+234', flag:'🇳🇬', name:'Nigeria'},
+                {code:'CM', dial:'+237', flag:'🇨🇲', name:'Cameroun'},
+                {code:'FR', dial:'+33',  flag:'🇫🇷', name:'France'},
+                {code:'BE', dial:'+32',  flag:'🇧🇪', name:'Belgique'},
+            ],
+            get full() { return this.dial + this.local.replace(/\s+/g,''); },
+            sync() { @this.set('form.phone', this.full); },
+            detect() {
+                if (navigator.language) {
+                    const lang = navigator.language.toUpperCase();
+                    const map = {CI:'CI',SN:'SN',ML:'ML',BF:'BF',GN:'GN',TG:'TG',BJ:'BJ',NE:'NE',GH:'GH',NG:'NG',CM:'CM',FR:'FR',BE:'BE'};
+                    const country = lang.split('-').pop();
+                    const found = this.countries.find(c => c.code === country);
+                    if (found) this.dial = found.dial;
+                }
+                this.sync();
+            }
+        }" x-init="detect()">
             <x-input-label for="phone" value="Numéro de téléphone" />
-            <x-text-input
-                wire:model="form.phone"
-                id="phone"
-                class="block mt-1 w-full"
-                type="tel"
-                inputmode="tel"
-                name="phone"
-                required
-                autofocus
-                autocomplete="tel"
-            />
+            <div class="flex mt-1 gap-2">
+                <select
+                    x-model="dial"
+                    @change="sync()"
+                    class="border-gray-300 focus:border-orange-500 focus:ring-orange-500 rounded-md shadow-sm text-sm flex-none w-36"
+                >
+                    <template x-for="c in countries" :key="c.code">
+                        <option :value="c.dial" x-text="c.flag + ' ' + c.dial" :selected="c.dial === dial"></option>
+                    </template>
+                </select>
+                <input
+                    x-model="local"
+                    @input="sync()"
+                    id="phone"
+                    type="tel"
+                    inputmode="numeric"
+                    placeholder="0718713781"
+                    required
+                    autofocus
+                    autocomplete="tel-national"
+                    class="border-gray-300 focus:border-orange-500 focus:ring-orange-500 rounded-md shadow-sm block w-full"
+                />
+            </div>
             <x-input-error :messages="$errors->get('form.phone')" class="mt-2" />
         </div>
 

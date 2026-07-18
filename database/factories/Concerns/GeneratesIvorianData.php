@@ -11,7 +11,7 @@ trait GeneratesIvorianData
             $groups[] = str_pad((string) fake()->numberBetween(0, 99), 2, '0', STR_PAD_LEFT);
         }
 
-        return '+225 '.implode(' ', $groups);
+        return '+225'.implode('', $groups);
     }
 
     protected function abidjanNeighborhood(): string

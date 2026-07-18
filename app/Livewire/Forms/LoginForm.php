@@ -12,10 +12,10 @@ use Livewire\Form;
 
 class LoginForm extends Form
 {
-    public string $step = 'phone';
-
     #[Validate('required|string')]
     public string $phone = '';
+
+    public string $countryCode = '+225';
 
     #[Validate('required|string')]
     public string $password = '';
@@ -23,17 +23,16 @@ class LoginForm extends Form
     #[Validate('boolean')]
     public bool $remember = true;
 
-    public function goToPinStep(): void
+    public function ajouterChiffre(string $d): void
     {
-        $this->validateOnly('phone');
-        $this->step = 'pin';
+        if (strlen($this->password) < 4) {
+            $this->password .= $d;
+        }
     }
 
-    public function backToPhoneStep(): void
+    public function effacerChiffre(): void
     {
-        $this->step = 'phone';
-        $this->password = '';
-        $this->resetErrorBag();
+        $this->password = substr($this->password, 0, -1);
     }
 
     /**
@@ -43,12 +42,18 @@ class LoginForm extends Form
      */
     public function authenticate(): void
     {
-        // Normalise avant rate-limit et tentative
-        $this->phone = preg_replace('/\s+/', '', $this->phone);
+        $digits = preg_replace('/\D/', '', $this->phone);
+        $codeDigits = preg_replace('/\D/', '', $this->countryCode);
+        // Avoid double prefix when the input already includes the country code
+        if (str_starts_with($digits, $codeDigits)) {
+            $phone = '+' . $digits;
+        } else {
+            $phone = $this->countryCode . $digits;
+        }
 
         $this->ensureIsNotRateLimited();
 
-        if (! Auth::attempt(['phone' => $this->phone, 'password' => $this->password], $this->remember)) {
+        if (! Auth::attempt(['phone' => $phone, 'password' => $this->password], $this->remember)) {
             RateLimiter::hit($this->throttleKey());
 
             $this->password = '';
@@ -82,11 +87,8 @@ class LoginForm extends Form
         ]);
     }
 
-    /**
-     * Get the authentication rate limiting throttle key.
-     */
     protected function throttleKey(): string
     {
-        return Str::transliterate(Str::lower($this->phone).'|'.request()->ip());
+        return Str::transliterate(Str::lower($this->countryCode . $this->phone) . '|' . request()->ip());
     }
 }

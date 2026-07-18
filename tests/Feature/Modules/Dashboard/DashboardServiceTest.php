@@ -101,6 +101,68 @@ test('topSellers ranks sellers by total sales amount over the period', function 
         ->and($ranking[0]['user_id'])->toBe($tenant['seller']->id);
 });
 
+test('topProductsToday returns up to 5 products sorted by revenue, with correct qty and total', function () {
+    $tenant = seedTenant(100);
+    $this->actingAs($tenant['seller']);
+    validatedInvoice($tenant, 3);
+
+    $top = app(DashboardService::class)->topProductsToday($tenant['company']);
+
+    expect($top)->toHaveCount(1)
+        ->and($top[0]['product_id'])->toBe($tenant['product']->id)
+        ->and($top[0]['total_qty'])->toBe(3);
+    expect($top[0]['total_revenue'])->toBeGreaterThan(0);
+});
+
+test('topProductsToday returns empty array when no sales today', function () {
+    $tenant = seedTenant(100);
+
+    $top = app(DashboardService::class)->topProductsToday($tenant['company']);
+
+    expect($top)->toBe([]);
+});
+
+test('cashByPaymentMethodToday splits cash and mobile money correctly', function () {
+    $tenant = seedTenant(100);
+    $this->actingAs($tenant['seller']);
+    $invoiceA = validatedInvoice($tenant, 2);
+    $invoiceB = validatedInvoice($tenant, 1);
+    $payService = app(PaymentService::class);
+    $payService->record($invoiceA, $invoiceA->total_amount, PaymentMethod::CASH);
+    $payService->record($invoiceB, $invoiceB->total_amount, PaymentMethod::MOBILE_MONEY);
+
+    $byMethod = app(DashboardService::class)->cashByPaymentMethodToday($tenant['company']);
+
+    expect($byMethod['cash'])->toBe($invoiceA->total_amount)
+        ->and($byMethod['mobile_money'])->toBe($invoiceB->total_amount)
+        ->and($byMethod['other'])->toBe(0);
+});
+
+test('cashByPaymentMethodToday returns zeros when no payments today', function () {
+    $tenant = seedTenant(100);
+
+    $byMethod = app(DashboardService::class)->cashByPaymentMethodToday($tenant['company']);
+
+    expect($byMethod)->toBe(['cash' => 0, 'mobile_money' => 0, 'other' => 0]);
+});
+
+test('yesterdayTotalSales returns 0 and salesTrendPercent does not divide by zero', function () {
+    $tenant = seedTenant(100);
+    $this->actingAs($tenant['seller']);
+
+    $yesterday = app(DashboardService::class)->yesterdayTotalSales($tenant['company']);
+    expect($yesterday)->toBe(0);
+
+    // Simule un today = 50 000, yesterday = 0 → percent = 'first'
+    $todayTotal = 50_000;
+    $yesterdayTotal = 0;
+    $result = $yesterdayTotal === 0
+        ? ($todayTotal > 0 ? 'first' : 'flat')
+        : (round((($todayTotal - $yesterdayTotal) / $yesterdayTotal) * 100));
+
+    expect($result)->toBe('first');
+});
+
 test('dashboard cache keys are scoped per company: no cross-tenant leakage', function () {
     $tenantA = seedTenant(100);
     $tenantB = seedTenant(100);

@@ -58,6 +58,35 @@ class OwnerDashboard extends Component
         return app(DashboardService::class)->topSellers($this->company, 'day');
     }
 
+    public function getTopProductsTodayProperty(): array
+    {
+        return app(DashboardService::class)->topProductsToday($this->company);
+    }
+
+    public function getCashByPaymentMethodTodayProperty(): array
+    {
+        return app(DashboardService::class)->cashByPaymentMethodToday($this->company);
+    }
+
+    public function getYesterdayTotalSalesProperty(): int
+    {
+        return app(DashboardService::class)->yesterdayTotalSales($this->company);
+    }
+
+    public function getSalesTrendPercentProperty(): string
+    {
+        $today     = $this->todaySales['total'];
+        $yesterday = $this->yesterdayTotalSales;
+
+        if ($yesterday === 0) {
+            return $today > 0 ? 'first' : 'flat';
+        }
+
+        $pct = round((($today - $yesterday) / $yesterday) * 100);
+
+        return ($pct >= 0 ? '+' : '') . $pct . '%';
+    }
+
     public function getOverdueDeliveriesProperty()
     {
         return Invoice::query()

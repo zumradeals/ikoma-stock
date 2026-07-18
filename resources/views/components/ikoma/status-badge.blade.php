@@ -10,6 +10,10 @@
         'free'           => ['icon' => '🎁', 'label' => 'Offert',             'class' => 'bg-info-wash text-info'],
         'unpaid'         => ['icon' => '⏳', 'label' => 'Non payé',           'class' => 'bg-gold-wash text-gold'],
         'cancelled'      => ['icon' => '❌', 'label' => 'Annulée',            'class' => 'bg-danger-wash text-danger'],
+        // Statuts de timing livraison
+        'retard'         => ['icon' => '🔴', 'label' => 'En retard',          'class' => 'bg-danger-wash text-danger'],
+        'aujourd_hui'    => ['icon' => '🟡', 'label' => "Aujourd'hui",        'class' => 'bg-gold-wash text-gold'],
+        'planifiee'      => ['icon' => '🔵', 'label' => 'Planifiée',          'class' => 'bg-info-wash text-info'],
     ];
 
     $config = $map[$status] ?? $map['unpaid'];

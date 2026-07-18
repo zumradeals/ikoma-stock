@@ -30,7 +30,7 @@ class IkomaDemoCompanySeeder extends Seeder
             'name'       => 'Boutique principale',
         ]);
 
-        User::factory()->create([
+        User::create([
             'name'       => 'Administrateur Demo',
             'phone'      => '+225 07 00 00 00 01',
             'password'   => Hash::make('IkomaAdmin2026!'),

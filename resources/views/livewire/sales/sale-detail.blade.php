@@ -1,86 +1,172 @@
-<div class="p-3 space-y-3">
-    @if (session('status'))
-        <p class="text-sm text-orange-700 bg-orange-50 rounded-lg p-3">{{ session('status') }}</p>
-    @endif
-    @error('form') <p class="text-sm text-red-600 bg-red-50 rounded-lg p-3">{{ $message }}</p> @enderror
+<div class="lg:flex lg:h-screen lg:overflow-hidden">
 
-    <div class="flex items-start justify-between gap-2">
-        <div>
-            <h1 class="text-base font-semibold text-gray-900">{{ \App\Support\HumanDate::format($sale->created_at) }}</h1>
-            <p class="text-xs text-gray-400">{{ $sale->number }}</p>
+{{-- ════ Sidebar desktop ════ --}}
+<div class="hidden lg:flex">
+    <x-ikoma.desktop-sidebar active="sell" />
+</div>
+
+{{-- ════ Contenu principal ════ --}}
+<div class="flex-1 lg:overflow-y-auto">
+
+    {{-- ── En-tête sticky ── --}}
+    <div class="sticky top-0 z-10 bg-white border-b border-line px-4 py-3">
+        <div class="flex items-start justify-between gap-3">
+            <div class="min-w-0">
+                <h1 class="text-base font-extrabold text-ink">{{ \App\Support\HumanDate::format($sale->created_at) }}</h1>
+                <p class="text-xs text-ink-soft mt-0.5">{{ $sale->number }}</p>
+            </div>
+            @if ($sale->invoice)
+                <x-ikoma.status-badge :status="\App\Support\SaleStatusPresenter::resolve(
+                    $sale->invoice->payment_status->value,
+                    $sale->invoice->delivery_status->value,
+                    $sale->invoice->total_amount,
+                    $sale->status->value === 'CANCELLED',
+                )" />
+            @endif
         </div>
-        @if ($sale->invoice)
-            <x-ikoma.status-badge :status="\App\Support\SaleStatusPresenter::resolve(
-                $sale->invoice->payment_status->value,
-                $sale->invoice->delivery_status->value,
-                $sale->invoice->total_amount,
-                $sale->status->value === 'CANCELLED',
-            )" />
-        @else
-            <x-status-badge
-                :status="match($sale->status->value) { 'VALIDATED' => 'green', 'CANCELLED' => 'red', default => 'gray' }"
-                :label="$sale->status->label()"
-            />
-        @endif
     </div>
 
-    <div class="rounded-xl border border-gray-200 bg-white p-4 space-y-2">
-        <p class="text-sm text-gray-500">{{ $sale->customer->name ?? 'Client de passage' }} · {{ $sale->outlet->name }} · {{ $sale->user->name }}</p>
+    <div class="p-4 space-y-4 max-w-2xl lg:mx-auto">
 
-        <div class="divide-y divide-gray-100">
-            @foreach ($sale->saleLines as $line)
-                <div class="flex justify-between py-1.5 text-sm">
-                    <span class="text-gray-600">{{ $line->product->name }} × {{ $line->quantity }}</span>
-                    <span class="text-gray-900 font-medium"><x-money :amount="$line->line_total" /></span>
-                </div>
-            @endforeach
-        </div>
-
-        @if ($sale->discount_amount > 0)
-            <div class="flex justify-between text-sm border-t border-gray-100 pt-2">
-                <span class="text-gray-500">Remise{{ $sale->discount_percentage > 0 ? " ({$sale->discount_percentage}%)" : '' }}</span>
-                <span class="text-red-600">- <x-money :amount="$sale->discount_amount" /></span>
+        {{-- Alertes --}}
+        @if (session('status'))
+            <div class="rounded-xl bg-success-wash border border-success/20 px-4 py-3 text-sm font-bold text-success">
+                {{ session('status') }}
             </div>
         @endif
+        @error('form')
+            <div class="rounded-xl bg-danger-wash border border-danger/20 px-4 py-3 text-sm font-bold text-danger">
+                {{ $message }}
+            </div>
+        @enderror
 
-        @if ($sale->status->value === 'CANCELLED')
-            <div class="rounded-lg bg-red-50 text-red-700 text-xs p-2 mt-2">
-                Annulée le {{ $sale->cancelled_at?->format('d/m/Y H:i') }}
-                @if ($sale->cancellation_reason)
-                    — {{ $sale->cancellation_reason }}
+        {{-- ── Infos client + vendeur ── --}}
+        <div class="rounded-2xl border border-line bg-white px-4 py-3 space-y-2">
+            <p class="text-xs font-extrabold text-ink-soft uppercase tracking-widest">Détails</p>
+            <div class="divide-y divide-line">
+                <div class="flex items-center justify-between py-2 text-sm">
+                    <span class="text-ink-soft">Client</span>
+                    <span class="font-semibold text-ink">{{ $sale->customer?->name ?? 'Client de passage' }}</span>
+                </div>
+                <div class="flex items-center justify-between py-2 text-sm">
+                    <span class="text-ink-soft">Point de vente</span>
+                    <span class="font-semibold text-ink">{{ $sale->outlet->name }}</span>
+                </div>
+                <div class="flex items-center justify-between py-2 text-sm">
+                    <span class="text-ink-soft">Vendeur</span>
+                    <span class="font-semibold text-ink">{{ $sale->user->name }}</span>
+                </div>
+            </div>
+            @if ($sale->status->value === 'CANCELLED')
+                <div class="rounded-xl bg-danger-wash border border-danger/20 px-3 py-2 text-xs font-bold text-danger">
+                    Annulée le {{ $sale->cancelled_at?->format('d/m/Y à H\hi') }}
+                    @if ($sale->cancellation_reason)
+                        — {{ $sale->cancellation_reason }}
+                    @endif
+                </div>
+            @endif
+        </div>
+
+        {{-- ── Lignes de vente ── --}}
+        <div class="rounded-2xl border border-line bg-white overflow-hidden">
+            <p class="px-4 py-3 text-xs font-extrabold text-ink-soft uppercase tracking-widest border-b border-line">Articles</p>
+            <div class="divide-y divide-line">
+                @foreach ($sale->saleLines as $line)
+                    <div class="flex items-center justify-between px-4 py-3 text-sm">
+                        <div class="min-w-0 flex-1">
+                            <p class="font-semibold text-ink">{{ $line->product->name }}</p>
+                            <p class="text-xs text-ink-soft">× {{ $line->quantity }}</p>
+                        </div>
+                        <p class="font-extrabold text-ink shrink-0"><x-money :amount="$line->line_total" /></p>
+                    </div>
+                @endforeach
+            </div>
+
+            {{-- Totaux --}}
+            <div class="border-t border-line px-4 py-3 space-y-2">
+                <div class="flex justify-between text-sm">
+                    <span class="text-ink-soft">Sous-total</span>
+                    <span class="font-semibold text-ink"><x-money :amount="$sale->total_amount" /></span>
+                </div>
+                @if ($sale->discount_amount > 0)
+                    <div class="flex justify-between text-sm">
+                        <span class="text-ink-soft">Remise{{ $sale->discount_percentage > 0 ? " ({$sale->discount_percentage} %)" : '' }}</span>
+                        <span class="font-bold text-danger">− <x-money :amount="$sale->discount_amount" /></span>
+                    </div>
+                @endif
+                <div class="flex justify-between text-sm pt-1 border-t border-line">
+                    <span class="font-extrabold text-ink">Total</span>
+                    <span class="font-extrabold text-ink text-base"><x-money :amount="$sale->total_amount - $sale->discount_amount" /></span>
+                </div>
+                @if ($sale->invoice && $sale->invoice->balance_due > 0 && $sale->status->value !== 'CANCELLED')
+                    <div class="flex justify-between text-sm">
+                        <span class="font-bold text-gold">Reste à payer</span>
+                        <span class="font-extrabold text-gold"><x-money :amount="$sale->invoice->balance_due" /></span>
+                    </div>
                 @endif
             </div>
-        @endif
-    </div>
+        </div>
 
-    @if ($sale->invoice)
-        @if ($sale->invoice->balance_due > 0 && $sale->status->value !== 'CANCELLED')
-            <a href="{{ route('sales.payment', $sale) }}" wire:navigate class="block text-center rounded-lg bg-orange-600 text-white text-sm font-medium py-2.5">
-                Enregistrer un paiement
+        {{-- ── Bouton Encaisser ── --}}
+        @if ($sale->invoice && $sale->invoice->balance_due > 0 && $sale->status->value !== 'CANCELLED')
+            <a
+                href="{{ route('sales.payment', $sale) }}"
+                wire:navigate
+                class="block w-full text-center rounded-2xl bg-brand text-white text-sm font-extrabold px-4 py-3.5 shadow-brand-glow hover:brightness-90 active:brightness-75 transition"
+            >
+                Encaisser <x-money :amount="$sale->invoice->balance_due" />
             </a>
         @endif
 
-        <livewire:components.invoice-pdf-viewer :invoice="$sale->invoice" wire:key="viewer-{{ $sale->invoice->id }}" />
-    @endif
-
-    @if ($this->canCancel)
-        @if ($showCancelForm)
-            <form wire:submit="requestCancel" class="rounded-xl border border-gray-200 bg-white p-4 space-y-2">
-                <textarea wire:model="cancelReason" rows="2" placeholder="Motif d'annulation" class="block w-full rounded-lg border-gray-200 text-sm"></textarea>
-                @error('cancelReason') <p class="text-xs text-red-600">{{ $message }}</p> @enderror
-                <div class="flex gap-3">
-                    <x-secondary-button type="button" wire:click="$set('showCancelForm', false)" class="flex-1 justify-center">
-                        Retour
-                    </x-secondary-button>
-                    <x-primary-button type="submit" class="flex-1 justify-center bg-red-600 hover:bg-red-700">
-                        Confirmer l'annulation
-                    </x-primary-button>
-                </div>
-            </form>
-        @else
-            <button type="button" wire:click="openCancelForm" class="w-full rounded-lg bg-red-50 text-red-700 text-sm font-medium py-2.5">
-                Annuler cette vente
-            </button>
+        {{-- ── Visionneuse PDF ── --}}
+        @if ($sale->invoice)
+            <livewire:components.invoice-pdf-viewer :invoice="$sale->invoice" wire:key="viewer-{{ $sale->invoice->id }}" />
         @endif
-    @endif
-</div>
+
+        {{-- ── Annulation ── --}}
+        @if ($this->canCancel)
+            @if ($showCancelForm)
+                <div class="rounded-2xl border border-danger/30 bg-danger-wash p-4 space-y-3">
+                    <p class="text-sm font-extrabold text-danger">Annuler cette vente</p>
+                    <form wire:submit="requestCancel" class="space-y-3">
+                        <textarea
+                            wire:model="cancelReason"
+                            rows="2"
+                            placeholder="Motif d'annulation (obligatoire)"
+                            class="w-full rounded-xl border border-danger/30 bg-white px-3 py-2.5 text-sm text-ink focus:border-danger focus:ring-0 focus:outline-none transition resize-none"
+                        ></textarea>
+                        @error('cancelReason')
+                            <p class="text-xs text-danger">{{ $message }}</p>
+                        @enderror
+                        <div class="flex gap-3">
+                            <button
+                                type="button"
+                                wire:click="$set('showCancelForm', false)"
+                                class="flex-1 rounded-xl border border-line text-sm font-bold text-ink-soft px-4 py-2.5 hover:bg-cream transition"
+                            >
+                                Retour
+                            </button>
+                            <button
+                                type="submit"
+                                class="flex-1 rounded-xl bg-danger text-white text-sm font-extrabold px-4 py-2.5 hover:brightness-90 transition"
+                            >
+                                Confirmer l'annulation
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            @else
+                <button
+                    type="button"
+                    wire:click="openCancelForm"
+                    class="w-full rounded-2xl border border-danger/30 bg-danger-wash text-danger text-sm font-bold px-4 py-3 hover:bg-danger/10 transition"
+                >
+                    Annuler cette vente
+                </button>
+            @endif
+        @endif
+
+    </div>{{-- /p-4 --}}
+</div>{{-- /flex-1 --}}
+
+</div>{{-- /lg:flex --}}

@@ -10,34 +10,6 @@ new #[Layout('layouts.auth')] class extends Component
 {
     public LoginForm $form;
 
-    public function goToPin(): void
-    {
-        $this->form->goToPinStep();
-    }
-
-    public function back(): void
-    {
-        $this->form->backToPhoneStep();
-    }
-
-    public function ajouterChiffre(string $d): void
-    {
-        if (strlen($this->form->password) >= 4) {
-            return;
-        }
-
-        $this->form->password .= $d;
-
-        if (strlen($this->form->password) === 4) {
-            $this->login();
-        }
-    }
-
-    public function effacer(): void
-    {
-        $this->form->password = substr($this->form->password, 0, -1);
-    }
-
     public function login(): void
     {
         $this->form->authenticate();
@@ -49,143 +21,135 @@ new #[Layout('layouts.auth')] class extends Component
 
         $this->redirectIntended(default: route($user->role->landingRoute(), absolute: false), navigate: true);
     }
+
+    public function ajouterChiffre(string $d): void
+    {
+        $this->form->ajouterChiffre($d);
+    }
+
+    public function effacerChiffre(): void
+    {
+        $this->form->effacerChiffre();
+    }
 }; ?>
 
-<div>
-    {{-- ===== ÉTAPE 1 : TÉLÉPHONE ===== --}}
-    @if ($form->step === 'phone')
-    <div class="text-center mb-8">
-        <div class="inline-flex h-16 w-16 items-center justify-center rounded-[20px] bg-brand text-white text-2xl font-extrabold mb-4">IK</div>
-        <h1 class="text-xl font-extrabold text-ink">Ikoma Stock</h1>
-        <p class="text-sm text-ink-soft mt-1">Gère ta boutique en toute simplicité.</p>
+<div class="space-y-5">
+
+    {{-- En-tête --}}
+    <div class="text-center">
+        <div class="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-brand text-white text-xl font-extrabold mb-3 shadow-brand-glow">IK</div>
+        <h1 class="text-lg font-extrabold text-ink">Ikoma Stock</h1>
+        <p class="text-sm text-ink-soft">Connecte-toi avec ton téléphone</p>
     </div>
 
-    <div x-data="{
-        dial: '+225',
-        local: '',
-        countries: [
-            {code:'CI', dial:'+225', flag:'🇨🇮', name:'Côte d\'Ivoire'},
-            {code:'SN', dial:'+221', flag:'🇸🇳', name:'Sénégal'},
-            {code:'ML', dial:'+223', flag:'🇲🇱', name:'Mali'},
-            {code:'BF', dial:'+226', flag:'🇧🇫', name:'Burkina Faso'},
-            {code:'GN', dial:'+224', flag:'🇬🇳', name:'Guinée'},
-            {code:'TG', dial:'+228', flag:'🇹🇬', name:'Togo'},
-            {code:'BJ', dial:'+229', flag:'🇧🇯', name:'Bénin'},
-            {code:'NE', dial:'+227', flag:'🇳🇪', name:'Niger'},
-            {code:'GH', dial:'+233', flag:'🇬🇭', name:'Ghana'},
-            {code:'NG', dial:'+234', flag:'🇳🇬', name:'Nigeria'},
-            {code:'CM', dial:'+237', flag:'🇨🇲', name:'Cameroun'},
-            {code:'FR', dial:'+33',  flag:'🇫🇷', name:'France'},
-            {code:'BE', dial:'+32',  flag:'🇧🇪', name:'Belgique'},
-        ],
-        get full() { return this.dial + this.local.replace(/\s+/g,''); },
-        sync() { @this.set('form.phone', this.full); },
-        detect() {
-            if (navigator.language) {
-                const country = navigator.language.toUpperCase().split('-').pop();
-                const found = this.countries.find(c => c.code === country);
-                if (found) this.dial = found.dial;
-            }
-            this.sync();
-        }
-    }" x-init="detect()" class="space-y-4">
-        <div>
-            <x-input-label for="phone" value="Numéro de téléphone" />
-            <div class="flex mt-1 gap-2">
+    {{-- Onglets --}}
+    <div class="flex rounded-xl bg-cream p-1 gap-1">
+        <button type="button" class="flex-1 rounded-lg py-2 text-sm font-bold text-white bg-brand shadow-sm">
+            Connexion
+        </button>
+        <button type="button" disabled class="flex-1 rounded-lg py-2 text-sm font-semibold text-ink-soft cursor-not-allowed">
+            Créer mon entreprise
+        </button>
+    </div>
+
+    {{-- Champ téléphone --}}
+    <div>
+        <label class="block text-xs font-bold text-ink-soft uppercase tracking-widest mb-1.5">Téléphone</label>
+        <div class="flex rounded-xl border border-line bg-white overflow-hidden focus-within:border-brand transition">
+            {{-- Sélecteur indicatif --}}
+            <div class="flex-none">
                 <select
-                    x-model="dial"
-                    @change="sync()"
-                    class="border-gray-300 focus:border-orange-500 focus:ring-orange-500 rounded-md shadow-sm text-sm flex-none w-36"
+                    wire:model="form.countryCode"
+                    class="h-full border-0 border-r border-line bg-cream text-sm font-bold text-ink px-3 focus:ring-0 focus:outline-none"
                 >
-                    <template x-for="c in countries" :key="c.code">
-                        <option :value="c.dial" x-text="c.flag + ' ' + c.dial" :selected="c.dial === dial"></option>
-                    </template>
+                    <option value="+225">🇨🇮 +225</option>
+                    <option value="+221">🇸🇳 +221</option>
+                    <option value="+223">🇲🇱 +223</option>
+                    <option value="+226">🇧🇫 +226</option>
+                    <option value="+224">🇬🇳 +224</option>
+                    <option value="+228">🇹🇬 +228</option>
+                    <option value="+229">🇧🇯 +229</option>
+                    <option value="+227">🇳🇪 +227</option>
+                    <option value="+233">🇬🇭 +233</option>
+                    <option value="+234">🇳🇬 +234</option>
+                    <option value="+237">🇨🇲 +237</option>
+                    <option value="+33">🇫🇷 +33</option>
+                    <option value="+32">🇧🇪 +32</option>
                 </select>
-                <input
-                    x-model="local"
-                    @input="sync()"
-                    @keydown.enter.prevent="if (local.length > 0) $wire.goToPin()"
-                    id="phone"
-                    type="tel"
-                    inputmode="numeric"
-                    placeholder="0718713781"
-                    autofocus
-                    autocomplete="tel-national"
-                    class="border-gray-300 focus:border-orange-500 focus:ring-orange-500 rounded-md shadow-sm block w-full"
-                />
             </div>
-            <x-input-error :messages="$errors->get('form.phone')" class="mt-2" />
+            <input
+                wire:model="form.phone"
+                type="tel"
+                inputmode="numeric"
+                placeholder="0718713781"
+                autocomplete="tel-national"
+                class="flex-1 border-0 px-3 py-3 text-sm text-ink placeholder-ink-soft/50 focus:ring-0 focus:outline-none bg-transparent"
+            />
+        </div>
+        <x-input-error :messages="$errors->get('form.phone')" class="mt-1.5" />
+    </div>
+
+    {{-- Section PIN --}}
+    <div>
+        <label class="block text-xs font-bold text-ink-soft uppercase tracking-widest mb-3">Ton code PIN (4 chiffres)</label>
+
+        {{-- Message d'erreur --}}
+        @if ($errors->has('form.password'))
+            <div class="mb-3 rounded-xl bg-red-50 border border-red-100 px-3 py-2.5 text-sm text-red-700 text-center">
+                {{ $errors->first('form.password') }}
+            </div>
+        @endif
+
+        {{-- 4 pastilles --}}
+        @php $pinLen = strlen($form->password); @endphp
+        <div class="flex justify-center gap-3 mb-4">
+            @for ($i = 0; $i < 4; $i++)
+                <div class="h-4 w-4 rounded-full border-2 transition-all duration-100
+                    {{ $i < $pinLen ? 'bg-brand border-brand scale-110' : 'border-gray-300' }}">
+                </div>
+            @endfor
         </div>
 
-        <p class="text-xs text-ink-soft">Le responsable t'a donné un code secret à 4 chiffres.</p>
-
-        <x-ikoma.button-primary
-            wire:click="goToPin"
-            x-bind:disabled="local.length === 0"
-            x-bind:class="local.length === 0 ? 'opacity-40 cursor-not-allowed' : ''"
-            class="w-full justify-center"
-        >
-            Continuer
-        </x-ikoma.button-primary>
-    </div>
-    @endif
-
-    {{-- ===== ÉTAPE 2 : PIN ===== --}}
-    @if ($form->step === 'pin')
-    @php $pinLen = strlen($form->password); @endphp
-    <div class="text-center mb-6">
-        <h1 class="text-xl font-extrabold text-ink">Bienvenue 👋</h1>
-        <p class="text-sm text-ink-soft mt-1">Entre ton code secret</p>
-    </div>
-
-    {{-- Message d'erreur --}}
-    @if ($errors->has('form.password'))
-        <div class="mb-4 rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700 text-center">
-            {{ $errors->first('form.password') }}
-        </div>
-    @endif
-
-    {{-- 4 points --}}
-    <div class="flex justify-center gap-4 mb-8">
-        @for ($i = 0; $i < 4; $i++)
-            <div class="h-5 w-5 rounded-full border-2 transition-all duration-150
-                {{ $i < $pinLen ? 'bg-brand border-brand' : 'border-gray-300' }}">
-            </div>
-        @endfor
-    </div>
-
-    {{-- Pavé numérique --}}
-    <div class="grid grid-cols-3 gap-3 max-w-[280px] mx-auto">
-        @foreach ([1,2,3,4,5,6,7,8,9] as $d)
+        {{-- Pavé numérique --}}
+        <div class="grid grid-cols-3 gap-2">
+            @foreach ([1,2,3,4,5,6,7,8,9] as $d)
+                <button
+                    type="button"
+                    wire:click="ajouterChiffre('{{ $d }}')"
+                    class="h-14 rounded-xl bg-cream text-lg font-bold text-ink active:bg-line transition select-none"
+                >{{ $d }}</button>
+            @endforeach
+            <div></div>
             <button
                 type="button"
-                wire:click="ajouterChiffre('{{ $d }}')"
-                class="h-16 rounded-2xl bg-white border border-line text-xl font-bold text-ink shadow-sm active:bg-cream transition"
-            >{{ $d }}</button>
-        @endforeach
-
-        {{-- Ligne du bas : vide, 0, effacer --}}
-        <div></div>
-        <button
-            type="button"
-            wire:click="ajouterChiffre('0')"
-            class="h-16 rounded-2xl bg-white border border-line text-xl font-bold text-ink shadow-sm active:bg-cream transition"
-        >0</button>
-        <button
-            type="button"
-            wire:click="effacer"
-            class="h-16 rounded-2xl bg-white border border-line text-xl font-bold text-ink shadow-sm active:bg-cream transition flex items-center justify-center"
-        >
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-ink-soft" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2M3 12l6.414 6.414a2 2 0 001.414.586H19a2 2 0 002-2V7a2 2 0 00-2-2h-8.172a2 2 0 00-1.414.586L3 12z" />
-            </svg>
-        </button>
+                wire:click="ajouterChiffre('0')"
+                class="h-14 rounded-xl bg-cream text-lg font-bold text-ink active:bg-line transition select-none"
+            >0</button>
+            <button
+                type="button"
+                wire:click="effacerChiffre"
+                class="h-14 rounded-xl bg-cream text-ink active:bg-line transition flex items-center justify-center select-none"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-ink-soft" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2M3 12l6.414 6.414a2 2 0 001.414.586H19a2 2 0 002-2V7a2 2 0 00-2-2h-8.172a2 2 0 00-1.414.586L3 12z" />
+                </svg>
+            </button>
+        </div>
     </div>
 
-    <div class="mt-6 text-center">
-        <button type="button" wire:click="back" class="text-sm text-ink-soft underline underline-offset-2">
-            Changer de numéro
-        </button>
-    </div>
-    @endif
+    {{-- Bouton connexion --}}
+    @php $canSubmit = strlen(trim($form->phone)) > 0 && strlen($form->password) === 4; @endphp
+    <button
+        type="button"
+        wire:click="login"
+        @class([
+            'inline-flex items-center justify-center w-full rounded-2xl px-4 py-3.5 font-extrabold text-sm transition',
+            'text-white bg-brand shadow-brand-glow hover:brightness-90 active:brightness-75' => $canSubmit,
+            'text-ink-soft bg-cream cursor-not-allowed' => ! $canSubmit,
+        ])
+        @disabled(! $canSubmit)
+    >
+        Se connecter
+    </button>
+
 </div>

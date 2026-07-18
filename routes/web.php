@@ -112,3 +112,4 @@ if (app()->isLocal() || app()->environment('local', 'development')) {
 }
 
 require __DIR__.'/auth.php';
+

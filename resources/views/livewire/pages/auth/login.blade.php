@@ -47,9 +47,10 @@ new #[Layout('layouts.auth')] class extends Component
         <button type="button" class="flex-1 rounded-lg py-2 text-sm font-bold text-white bg-brand shadow-sm">
             Connexion
         </button>
-        <button type="button" disabled class="flex-1 rounded-lg py-2 text-sm font-semibold text-ink-soft cursor-not-allowed">
+        <a href="{{ route('register.identity') }}" wire:navigate
+           class="flex-1 rounded-lg py-2 text-sm font-semibold text-ink-soft text-center hover:text-ink transition">
             Créer mon entreprise
-        </button>
+        </a>
     </div>
 
     {{-- Champ téléphone --}}

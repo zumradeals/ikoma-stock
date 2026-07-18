@@ -1,4 +1,8 @@
-<div class="p-3 space-y-3">
+<div class="lg:flex lg:h-screen lg:overflow-hidden">
+<div class="hidden lg:flex">
+    <x-ikoma.desktop-sidebar active="stock" />
+</div>
+<div class="flex-1 lg:overflow-y-auto p-3 space-y-3">
     <div class="flex items-center gap-2">
         <input
             type="search"
@@ -332,4 +336,5 @@
             <p class="text-center text-ink-soft text-sm py-10">Aucun produit trouvé.</p>
         @endforelse
     </div>
+</div>
 </div>

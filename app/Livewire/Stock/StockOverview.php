@@ -18,7 +18,7 @@ use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
-#[Layout('layouts.app')]
+#[Layout('layouts.app', ['bareDesktop' => true])]
 class StockOverview extends Component
 {
     use WithFileUploads;

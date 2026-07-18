@@ -7,35 +7,7 @@
 <div class="hidden lg:flex h-screen overflow-hidden bg-cream">
 
     {{-- ── Sidebar charcoal ── --}}
-    <aside class="w-20 flex-none bg-charcoal flex flex-col items-center py-5 gap-1.5">
-        <div class="mb-5 h-9 w-9 rounded-[11px] bg-brand flex items-center justify-center text-white text-[13px] font-extrabold">
-            IK
-        </div>
-
-        @php
-        $sideItems = [
-            ['icon' => '🏠', 'label' => 'Accueil',   'route' => 'app.dashboard', 'active' => false],
-            ['icon' => '🛒', 'label' => 'Vendre',     'route' => 'sales.create',  'active' => true],
-            ['icon' => '💰', 'label' => 'Paiements',  'route' => 'closing.index', 'active' => false],
-            ['icon' => '👥', 'label' => 'Clients',    'route' => 'customers.index','active' => false],
-        ];
-        @endphp
-
-        @foreach ($sideItems as $item)
-            <a href="{{ route($item['route']) }}" wire:navigate
-               class="flex w-16 flex-col items-center gap-1 rounded-xl py-2.5 text-[10px] font-extrabold transition
-                      {{ $item['active'] ? 'bg-brand/20 text-brand' : 'text-charcoal-line hover:text-white/70' }}">
-                <span class="text-lg leading-none">{{ $item['icon'] }}</span>
-                {{ $item['label'] }}
-            </a>
-        @endforeach
-
-        <a href="{{ route('admin.index') }}" wire:navigate
-           class="mt-auto flex w-16 flex-col items-center gap-1 rounded-xl py-2.5 text-[10px] font-extrabold text-charcoal-line hover:text-white/70 transition">
-            <span class="text-lg leading-none">⚙️</span>
-            Gestion
-        </a>
-    </aside>
+    <x-ikoma.desktop-sidebar active="sell" />
 
     {{-- ── Zone principale ── --}}
     <div class="flex flex-1 flex-col min-w-0">

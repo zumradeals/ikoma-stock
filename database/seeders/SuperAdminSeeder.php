@@ -11,11 +11,11 @@ class SuperAdminSeeder extends Seeder
     public function run(): void
     {
         User::factory()->superAdmin()->create([
-            'name' => 'Super Administrateur',
-            'email' => 'superadmin@ikoma-stock.test',
+            'name'     => 'Super Administrateur',
+            'phone'    => '+225 07 00 00 00 00',
             'password' => Hash::make('IkomaSuper2026!'),
         ]);
 
-        $this->command?->info('SUPER_ADMIN créé : superadmin@ikoma-stock.test / IkomaSuper2026!');
+        $this->command?->info('SUPER_ADMIN créé : +225 07 00 00 00 00 / IkomaSuper2026!');
     }
 }

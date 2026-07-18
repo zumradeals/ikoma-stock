@@ -10,7 +10,7 @@ use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-#[Layout('layouts.app')]
+#[Layout('layouts.app', ['bareDesktop' => true])]
 class CustomerList extends Component
 {
     use WithPagination;

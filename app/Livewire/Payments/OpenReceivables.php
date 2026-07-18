@@ -7,7 +7,7 @@ use App\Models\Receivable;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
-#[Layout('layouts.app')]
+#[Layout('layouts.app', ['bareDesktop' => true])]
 class OpenReceivables extends Component
 {
     public string $search = '';
@@ -26,6 +26,16 @@ class OpenReceivables extends Component
             ->orderByDesc('days_overdue')
             ->orderByDesc('balance_due')
             ->get();
+    }
+
+    public function getTotalDueProperty(): int
+    {
+        return $this->receivables->sum('balance_due');
+    }
+
+    public function getDistinctCustomersCountProperty(): int
+    {
+        return $this->receivables->pluck('customer_id')->filter()->unique()->count();
     }
 
     public function render()

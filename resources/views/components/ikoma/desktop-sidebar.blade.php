@@ -32,7 +32,8 @@ $canManage = in_array(auth()->user()?->role, [
 
     @if ($canManage)
         <a href="{{ route('admin.index') }}" wire:navigate
-           class="mt-auto flex w-16 flex-col items-center gap-1 rounded-xl py-2.5 text-[10px] font-extrabold text-charcoal-line hover:text-white/70 transition">
+           class="mt-auto flex w-16 flex-col items-center gap-1 rounded-xl py-2.5 text-[10px] font-extrabold transition
+                  {{ $active === 'manage' ? 'bg-brand/20 text-brand' : 'text-charcoal-line hover:text-white/70' }}">
             <span class="text-lg leading-none">⚙️</span>
             Gestion
         </a>

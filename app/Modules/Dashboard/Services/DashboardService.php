@@ -13,6 +13,7 @@ use App\Models\Payment;
 use App\Models\Product;
 use App\Models\Receivable;
 use App\Models\Sale;
+use App\Models\SaleLine;
 use App\Models\Transfer;
 use Closure;
 use Illuminate\Support\Collection;
@@ -106,6 +107,70 @@ class DashboardService
             ->where('company_id', $company->id)
             ->whereIn('status', [TransferStatus::SHIPPED->value, TransferStatus::PARTIALLY_RECEIVED->value])
             ->get());
+    }
+
+    /**
+     * Retourne les 5 produits les plus vendus aujourd'hui (quantité + CA),
+     * triés par CA décroissant. Jointure via sale_lines → sales pour filtrer
+     * par company_id et date.
+     */
+    public function topProductsToday(Company $company): array
+    {
+        return $this->remember($company, 'top-products-today', fn () => SaleLine::query()
+            ->join('sales', 'sale_lines.sale_id', '=', 'sales.id')
+            ->join('products', 'sale_lines.product_id', '=', 'products.id')
+            ->where('sales.company_id', $company->id)
+            ->where('sales.status', SaleStatus::VALIDATED->value)
+            ->whereDate('sales.created_at', now()->toDateString())
+            ->groupBy('sale_lines.product_id', 'products.name')
+            ->selectRaw('sale_lines.product_id, products.name as product_name, SUM(sale_lines.quantity) as total_qty, SUM(sale_lines.line_total) as total_revenue')
+            ->orderByDesc('total_revenue')
+            ->limit(5)
+            ->get()
+            ->map(fn ($row) => [
+                'product_id'    => $row->product_id,
+                'product_name'  => $row->product_name,
+                'total_qty'     => (int) $row->total_qty,
+                'total_revenue' => (int) $row->total_revenue,
+            ])
+            ->all());
+    }
+
+    /**
+     * Total encaissé aujourd'hui, ventilé par méthode de paiement.
+     * CASH et MOBILE_MONEY ont leur propre clé ; tout le reste va dans "other".
+     */
+    public function cashByPaymentMethodToday(Company $company): array
+    {
+        return $this->remember($company, 'cash-by-method-today', function () use ($company) {
+            $rows = Payment::query()
+                ->where('company_id', $company->id)
+                ->whereDate('payment_date', now()->toDateString())
+                ->groupBy('method')
+                ->selectRaw('method, SUM(amount) as total')
+                ->get()
+                ->keyBy('method');
+
+            $excluded = [PaymentMethod::CASH, PaymentMethod::MOBILE_MONEY];
+
+            return [
+                'cash'         => (int) ($rows->get(PaymentMethod::CASH->value)?->total ?? 0),
+                'mobile_money' => (int) ($rows->get(PaymentMethod::MOBILE_MONEY->value)?->total ?? 0),
+                'other'        => (int) $rows->filter(fn ($r) => ! in_array($r->method, $excluded))->sum('total'),
+            ];
+        });
+    }
+
+    /**
+     * Même calcul que todaySales mais pour hier — sert à calculer le % d'évolution.
+     */
+    public function yesterdayTotalSales(Company $company): int
+    {
+        return $this->remember($company, 'yesterday-sales', fn () => (int) Sale::query()
+            ->where('company_id', $company->id)
+            ->whereDate('created_at', now()->subDay()->toDateString())
+            ->where('status', SaleStatus::VALIDATED->value)
+            ->sum('total_amount'));
     }
 
     public function topSellers(Company $company, string $period = 'month'): array

@@ -75,6 +75,7 @@ Route::middleware('auth')->group(function () {
 
     Route::prefix('clients')->group(function () {
         Route::get('/', CustomerList::class)->name('customers.index');
+        Route::get('/nouveau', CustomerList::class)->name('clients.nouveau');
         Route::middleware('tenant')->get('/{customer}', CustomerCard::class)->name('customers.show');
     });
 

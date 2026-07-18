@@ -15,6 +15,7 @@ use App\Livewire\Customers\CustomerList;
 use App\Livewire\Admin\CompanySettings;
 use App\Livewire\Closing\DailyClosingForm;
 use App\Livewire\Dashboard\OwnerDashboard;
+use App\Livewire\Dashboard\SellerHome;
 use App\Livewire\Deliveries\DeliveryDetail;
 use App\Livewire\Deliveries\PendingDeliveries;
 use App\Livewire\Platform\CompanyList;
@@ -91,7 +92,7 @@ Route::middleware('auth')->group(function () {
 
     Route::middleware('tenant')->prefix('app')->group(function () {
         Route::get('/dashboard', OwnerDashboard::class)->name('app.dashboard');
-        Route::get('/accueil', NewSale::class)->name('app.home');
+        Route::get('/accueil', SellerHome::class)->name('app.home');
         Route::get('/stock', StockOverview::class)->name('app.stock');
     });
 

@@ -85,7 +85,7 @@ new #[Layout('layouts.auth')] class extends Component
         Auth::login($user);
         Session::put('current_company_id', $user->company_id);
 
-        $this->redirect(route('app.dashboard'), navigate: true);
+        $this->redirect(route('register.welcome'));
     }
 }; ?>
 

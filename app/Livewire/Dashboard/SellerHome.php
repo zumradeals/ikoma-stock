@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Dashboard;
 
+use App\Models\Sale;
 use App\Modules\Dashboard\Services\DashboardService;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -27,6 +28,16 @@ class SellerHome extends Component
     public function getLowStockAlertsCountProperty(): int
     {
         return app(DashboardService::class)->lowStockAlerts($this->company)->count();
+    }
+
+    public function getRecentSalesProperty()
+    {
+        return Sale::query()
+            ->with(['customer', 'invoice'])
+            ->where('outlet_id', auth()->user()->outlet_id)
+            ->latest()
+            ->limit(3)
+            ->get();
     }
 
     public function render()

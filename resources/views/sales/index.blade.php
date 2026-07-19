@@ -3,7 +3,7 @@
 
     {{-- ════ Sidebar desktop ════ --}}
     <div class="hidden lg:flex">
-        <x-ikoma.desktop-sidebar active="sell" />
+        <x-ikoma.desktop-sidebar active="history" />
     </div>
 
     {{-- ════ Contenu principal ════ --}}

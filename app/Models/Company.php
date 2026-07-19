@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\SubscriptionPlan;
 use App\Traits\HasAudit;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -15,13 +16,15 @@ class Company extends Model
     protected $fillable = [
         'name', 'address', 'phone', 'email', 'currency', 'invoice_prefix',
         'logo_path', 'footer_text', 'primary_color', 'is_active', 'suspended_at', 'suspended_reason',
+        'subscription_plan',
     ];
 
     protected function casts(): array
     {
         return [
-            'is_active' => 'boolean',
-            'suspended_at' => 'datetime',
+            'is_active'         => 'boolean',
+            'suspended_at'      => 'datetime',
+            'subscription_plan' => SubscriptionPlan::class,
         ];
     }
 

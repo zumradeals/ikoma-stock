@@ -1,7 +1,8 @@
 <div>
 @php
+    $hasDeliveries = $this->hasDeliveriesModule;
     $urgenceCount = ($this->outstandingReceivables > 0 ? 1 : 0)
-        + ($this->unpaidDeliveriesCount > 0 ? 1 : 0)
+        + ($hasDeliveries && $this->unpaidDeliveriesCount > 0 ? 1 : 0)
         + ($this->lowStockAlertsCount > 0 ? 1 : 0);
     $firstName = Illuminate\Support\Str::of(auth()->user()->name)->before(' ');
 @endphp
@@ -40,11 +41,13 @@
                         <span class="flex-1 text-left">Encaisser un paiement</span>
                         <span class="ml-auto text-sm opacity-30">›</span>
                     </a>
+                    @if ($hasDeliveries)
                     <a href="{{ route('deliveries.index') }}" wire:navigate class="inline-flex items-center gap-3 w-full rounded-2xl px-4 py-3.5 font-extrabold text-sm text-ink bg-white border border-line transition hover:border-brand/40">
                         <span class="flex h-[34px] w-[34px] flex-none items-center justify-center rounded-[10px] bg-brand-wash text-base">📦</span>
                         <span class="flex-1 text-left">Livrer un client</span>
                         <span class="ml-auto text-sm opacity-30">›</span>
                     </a>
+                    @endif
                 </div>
             </div>
 
@@ -69,7 +72,7 @@
                                 <span class="text-ink-soft opacity-40">›</span>
                             </a>
                         @endif
-                        @if ($this->unpaidDeliveriesCount > 0)
+                        @if ($hasDeliveries && $this->unpaidDeliveriesCount > 0)
                             <a href="{{ route('deliveries.index') }}" wire:navigate class="flex items-center gap-3 rounded-xl bg-white border border-line px-4 py-3 text-sm hover:border-brand/30 transition">
                                 <span class="h-2 w-2 rounded-full flex-none bg-info"></span>
                                 <span class="flex-1 text-ink">{{ $this->unpaidDeliveriesCount }} {{ $this->unpaidDeliveriesCount > 1 ? 'commandes à livrer' : 'commande à livrer' }}</span>
@@ -144,11 +147,13 @@
                 <span class="flex-1 text-left">Encaisser un paiement</span>
                 <span class="ml-auto text-sm opacity-30">›</span>
             </a>
+            @if ($hasDeliveries)
             <a href="{{ route('deliveries.index') }}" wire:navigate class="inline-flex items-center gap-3 w-full rounded-2xl px-4 py-3.5 font-extrabold text-sm text-ink bg-white border border-line transition hover:border-brand/40">
                 <span class="flex h-[34px] w-[34px] flex-none items-center justify-center rounded-[10px] bg-brand-wash text-base">📦</span>
                 <span class="flex-1 text-left">Livrer un client</span>
                 <span class="ml-auto text-sm opacity-30">›</span>
             </a>
+            @endif
         </div>
     </div>
 
@@ -173,7 +178,7 @@
                         <span class="text-ink-soft opacity-40">›</span>
                     </a>
                 @endif
-                @if ($this->unpaidDeliveriesCount > 0)
+                @if ($hasDeliveries && $this->unpaidDeliveriesCount > 0)
                     <a href="{{ route('deliveries.index') }}" wire:navigate class="flex items-center gap-3 rounded-xl bg-white border border-line px-4 py-3 text-sm hover:border-brand/30 transition">
                         <span class="h-2 w-2 rounded-full flex-none bg-info"></span>
                         <span class="flex-1 text-ink">{{ $this->unpaidDeliveriesCount }} {{ $this->unpaidDeliveriesCount > 1 ? 'commandes à livrer' : 'commande à livrer' }}</span>

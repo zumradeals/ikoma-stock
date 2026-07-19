@@ -6,9 +6,14 @@ $items = [
     ['key' => 'sell',     'icon' => '🛒', 'label' => 'Vendre',    'route' => 'sales.create'],
     ['key' => 'payments', 'icon' => '💰', 'label' => 'Paiements', 'route' => 'payments.index'],
     ['key' => 'stock',    'icon' => '📦', 'label' => 'Stock',     'route' => 'stock.index'],
-    ['key' => 'clients',    'icon' => '👥', 'label' => 'Clients',    'route' => 'customers.index'],
-    ['key' => 'livraisons', 'icon' => '🚚', 'label' => 'Livraisons', 'route' => 'deliveries.index'],
+    ['key' => 'clients',  'icon' => '👥', 'label' => 'Clients',   'route' => 'customers.index'],
 ];
+
+$hasDeliveries = auth()->user()?->company?->hasModule('deliveries') ?? false;
+
+if ($hasDeliveries) {
+    $items[] = ['key' => 'livraisons', 'icon' => '🚚', 'label' => 'Livraisons', 'route' => 'deliveries.index'];
+}
 
 $canManage = in_array(auth()->user()?->role, [
     \App\Enums\UserRole::ADMIN_COMPANY,

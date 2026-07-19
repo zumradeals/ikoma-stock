@@ -15,6 +15,11 @@ class SellerHome extends Component
         return auth()->user()->company;
     }
 
+    public function getHasDeliveriesModuleProperty(): bool
+    {
+        return $this->company?->hasModule('deliveries') ?? false;
+    }
+
     public function getOutstandingReceivablesProperty(): int
     {
         return app(DashboardService::class)->outstandingReceivables($this->company);

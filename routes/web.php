@@ -81,7 +81,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/paiements', \App\Livewire\Payments\OpenReceivables::class)->name('payments.index');
 
-    Route::prefix('livraisons')->group(function () {
+    Route::prefix('livraisons')->middleware('module:deliveries')->group(function () {
         Route::get('/', PendingDeliveries::class)->name('deliveries.index');
         Route::middleware('tenant')->get('/{invoice}', DeliveryDetail::class)->name('deliveries.show');
         Route::middleware('tenant')->get('/bon/{delivery}', [DeliveryController::class, 'pdf'])->name('deliveries.pdf');

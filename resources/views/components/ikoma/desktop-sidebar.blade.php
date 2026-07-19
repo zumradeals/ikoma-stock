@@ -205,4 +205,29 @@ $homeRoute = match ($role) {
         </div>
     @endif
 
+    {{-- ── Compte / Déconnexion ──────────────────────────────────── --}}
+    <div class="mt-auto px-3 pt-3 border-t border-white/10">
+        <a href="{{ route('profile') }}" wire:navigate
+           @class(['flex items-center gap-2.5 px-2 py-2 rounded-xl transition',
+                   'bg-brand/20'        => $active === 'profile',
+                   'hover:bg-white/10' => $active !== 'profile'])>
+            <div class="h-8 w-8 rounded-full bg-brand/20 text-brand flex items-center justify-center text-[12px] font-extrabold shrink-0">
+                {{ \Illuminate\Support\Str::of($user->name)->substr(0, 1)->upper() }}
+            </div>
+            <div class="min-w-0 flex-1">
+                <p class="text-[13px] font-bold text-white truncate">{{ $user->name }}</p>
+                <p class="text-[11px] text-white/50">Voir le profil</p>
+            </div>
+        </a>
+
+        <form method="POST" action="{{ route('logout') }}">
+            @csrf
+            <button type="submit"
+                    class="w-full flex items-center gap-2.5 px-2 py-2 rounded-xl text-[13px] font-bold text-white/70 hover:text-white hover:bg-white/10 transition">
+                <span class="w-5 text-center leading-none">🚪</span>
+                <span>Déconnexion</span>
+            </button>
+        </form>
+    </div>
+
 </aside>

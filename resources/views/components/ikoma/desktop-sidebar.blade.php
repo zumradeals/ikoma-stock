@@ -16,6 +16,7 @@ $canManageCo   = $isAdmin || $isManager;
 $canCorrectStock = $isAdmin || $isWarehouseKeeper;
 
 $hasDeliveries = ! $isSuperAdmin && ($user?->company?->hasModule('deliveries') ?? false);
+$hasQuotes     = ! $isSuperAdmin && ($user?->company?->hasModule('quotes') ?? false);
 
 // Accueil = landing page du rôle courant
 $homeRoute = match ($role) {
@@ -74,6 +75,16 @@ $homeRoute = match ($role) {
                            'text-charcoal-line hover:text-white/70 hover:bg-white/5' => $active !== 'payments'])>
                     <span class="w-5 text-center leading-none">💰</span>
                     <span>Encaissements</span>
+                </a>
+            @endif
+
+            @if ($hasQuotes && $canSell)
+                <a href="{{ route('quotes.index') }}" wire:navigate
+                   @class(['flex items-center gap-2.5 px-2 py-2 rounded-xl text-[13px] font-bold transition',
+                           'bg-brand/20 text-brand'        => $active === 'quotes',
+                           'text-charcoal-line hover:text-white/70 hover:bg-white/5' => $active !== 'quotes'])>
+                    <span class="w-5 text-center leading-none">📄</span>
+                    <span>Devis</span>
                 </a>
             @endif
 

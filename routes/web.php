@@ -25,6 +25,9 @@ use App\Livewire\Platform\PlatformSettingsForm;
 use App\Livewire\Stock\StockCorrection;
 use App\Livewire\Stock\StockMovements;
 use App\Livewire\Stock\StockOverview;
+use App\Livewire\Quotes\NewQuote;
+use App\Livewire\Quotes\QuoteDetail;
+use App\Livewire\Quotes\QuoteList;
 use App\Livewire\Transfers\TransferDetail;
 use App\Livewire\Transfers\TransferList;
 use Illuminate\Support\Facades\Route;
@@ -82,6 +85,12 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::get('/paiements', \App\Livewire\Payments\OpenReceivables::class)->name('payments.index');
+
+    Route::prefix('devis')->middleware('module:quotes')->group(function () {
+        Route::get('/', QuoteList::class)->name('quotes.index');
+        Route::get('/nouveau', NewQuote::class)->name('quotes.create');
+        Route::middleware('tenant')->get('/{quote}', QuoteDetail::class)->name('quotes.show');
+    });
 
     Route::prefix('livraisons')->middleware('module:deliveries')->group(function () {
         Route::get('/', PendingDeliveries::class)->name('deliveries.index');

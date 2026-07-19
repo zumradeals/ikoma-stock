@@ -156,6 +156,14 @@ $homeRoute = match ($role) {
                 <span>Clôture</span>
             </a>
 
+            <a href="{{ route('admin.team') }}" wire:navigate
+               @class(['flex items-center gap-2.5 px-2 py-2 rounded-xl text-[13px] font-bold transition',
+                       'bg-brand/20 text-brand'        => $active === 'team',
+                       'text-charcoal-line hover:text-white/70 hover:bg-white/5' => $active !== 'team'])>
+                <span class="w-5 text-center leading-none">👥</span>
+                <span>Équipe</span>
+            </a>
+
             <a href="{{ route('admin.index') }}" wire:navigate
                @class(['flex items-center gap-2.5 px-2 py-2 rounded-xl text-[13px] font-bold transition',
                        'bg-brand/20 text-brand'        => $active === 'manage',

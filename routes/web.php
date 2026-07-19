@@ -13,6 +13,7 @@ use App\Livewire\Sales\SaleDetail;
 use App\Livewire\Customers\CustomerCard;
 use App\Livewire\Customers\CustomerList;
 use App\Livewire\Admin\CompanySettings;
+use App\Livewire\Admin\TeamMembers;
 use App\Livewire\Closing\DailyClosingForm;
 use App\Livewire\Dashboard\OwnerDashboard;
 use App\Livewire\Dashboard\SellerHome;
@@ -115,6 +116,7 @@ Route::middleware('auth')->group(function () {
 
     Route::middleware('role:ADMIN_COMPANY|OUTLET_MANAGER')->prefix('admin')->group(function () {
         Route::get('/', CompanySettings::class)->name('admin.index');
+        Route::get('/equipe', TeamMembers::class)->name('admin.team');
     });
 
     Route::middleware('super-admin')->prefix('admin/plateforme')->group(function () {

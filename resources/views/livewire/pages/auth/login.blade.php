@@ -41,9 +41,9 @@ new #[Layout('layouts.auth', ['bareHeader' => true])] class extends Component
         @if ($platformSettings->app_logo_path && \Illuminate\Support\Facades\Storage::disk('public')->exists($platformSettings->app_logo_path))
             <img src="{{ Storage::url($platformSettings->app_logo_path) }}"
                  alt="{{ $platformSettings->resolvedAppName() }}"
-                 class="mx-auto h-20 w-auto max-w-full object-contain">
+                 class="mx-auto h-[5.5rem] w-auto max-w-full object-contain">
         @else
-            <div class="inline-flex h-20 w-20 items-center justify-center rounded-2xl bg-brand text-white text-xl font-extrabold shadow-brand-glow">IK</div>
+            <div class="inline-flex h-[5.5rem] w-[5.5rem] items-center justify-center rounded-2xl bg-brand text-white text-xl font-extrabold shadow-brand-glow">IK</div>
         @endif
     </div>
 

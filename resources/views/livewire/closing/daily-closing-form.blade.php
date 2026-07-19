@@ -57,7 +57,7 @@
         </div>
     </div>
 
-    @if ($closing->status !== \App\Enums\DailyClosingStatus::VALIDATED)
+    @if (in_array($closing->status, [\App\Enums\DailyClosingStatus::OPEN, \App\Enums\DailyClosingStatus::REJECTED], true))
         <div class="rounded-xl border border-gray-200 bg-white p-4 space-y-3">
             <div>
                 <label class="text-sm font-medium text-gray-700">Montant physique en caisse</label>
@@ -163,7 +163,7 @@
         </div>
     </div>
 
-    @if ($closing->status !== \App\Enums\DailyClosingStatus::VALIDATED)
+    @if (in_array($closing->status, [\App\Enums\DailyClosingStatus::OPEN, \App\Enums\DailyClosingStatus::REJECTED], true))
         <div class="rounded-xl border border-gray-200 bg-white p-4 space-y-3">
             <div>
                 <label class="text-sm font-medium text-gray-700">Montant physique en caisse</label>

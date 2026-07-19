@@ -125,6 +125,12 @@ class DailyClosingForm extends Component
 
     public function close(): void
     {
+        if (! in_array($this->closing->status, [DailyClosingStatus::OPEN, DailyClosingStatus::REJECTED], true)) {
+            $this->closing->refresh();
+
+            return;
+        }
+
         app(DailyClosingService::class)->submitForValidation(
             $this->closing,
             $this->declaredCash * 100,

@@ -48,7 +48,7 @@ class User extends Authenticatable
      * Génère un code d'accès numérique (pas de lettres) pour un public
      * peu à l'aise avec la lecture — utilisable au clavier téléphonique.
      */
-    public static function generateAccessCode(int $length = 8): string
+    public static function generateAccessCode(int $length = 4): string
     {
         $code = '';
 

@@ -27,7 +27,7 @@
     @endphp
     <body class="font-sans text-gray-900 antialiased"
           style="--brand:{{ $brandHex }};--brand-dark:{{ $brandDark }};--brand-wash:{{ $brandWash }};">
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-10 sm:pt-0 px-4 bg-gradient-to-b from-orange-50 via-white to-white">
+        <div class="min-h-screen flex flex-col sm:justify-center items-center {{ $bareHeader ? 'pt-4' : 'pt-10' }} sm:pt-0 px-4 bg-gradient-to-b from-orange-50 via-white to-white">
 
             @unless ($bareHeader)
                 {{-- En-tête plateforme : masqué sur les pages ayant leur propre en-tête (ex. login) --}}
@@ -46,7 +46,7 @@
                 </div>
             @endunless
 
-            <div class="w-full sm:max-w-md {{ $bareHeader ? 'mt-8' : '' }} px-6 py-6 bg-white shadow-lg shadow-orange-100 overflow-hidden rounded-3xl border border-orange-100">
+            <div class="w-full sm:max-w-md {{ $bareHeader ? 'mt-2' : '' }} px-6 py-6 bg-white shadow-lg shadow-orange-100 overflow-hidden rounded-3xl border border-orange-100">
                 {{ $slot }}
             </div>
         </div>

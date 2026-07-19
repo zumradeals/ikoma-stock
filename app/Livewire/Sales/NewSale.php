@@ -129,7 +129,7 @@ class NewSale extends Component
     #[On('cart.choose-customer')]
     public function goToCustomerStep(): void
     {
-        $this->step = 2;
+        $this->step = 3;
     }
 
     #[On('cart.checkout')]

@@ -57,6 +57,7 @@ class ProductCatalog extends Component
     public function addToCart(int $productId): void
     {
         $this->dispatch('cart.add', productId: $productId);
+        $this->showingProductId = null;
     }
 
     public function getCategoriesProperty()

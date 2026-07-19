@@ -44,6 +44,21 @@ class User extends Authenticatable
         );
     }
 
+    /**
+     * Génère un code d'accès numérique (pas de lettres) pour un public
+     * peu à l'aise avec la lecture — utilisable au clavier téléphonique.
+     */
+    public static function generateAccessCode(int $length = 8): string
+    {
+        $code = '';
+
+        for ($i = 0; $i < $length; $i++) {
+            $code .= random_int(0, 9);
+        }
+
+        return $code;
+    }
+
     public function company(): BelongsTo
     {
         return $this->belongsTo(Company::class);

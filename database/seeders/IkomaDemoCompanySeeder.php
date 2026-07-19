@@ -30,16 +30,20 @@ class IkomaDemoCompanySeeder extends Seeder
             'name'       => 'Boutique principale',
         ]);
 
+        $phone = '+22507000001';
+        $code = User::generateAccessCode();
+
         User::create([
             'name'       => 'Administrateur Demo',
-            'phone'      => '+225 07 00 00 00 01',
-            'password'   => Hash::make('IkomaAdmin2026!'),
+            'phone'      => $phone,
+            'email'      => 'admin@ikoma-demo.ci',
+            'password'   => Hash::make($code),
             'company_id' => $company->id,
             'outlet_id'  => $outlet->id,
             'role'       => UserRole::ADMIN_COMPANY,
         ]);
 
         $this->command?->info('Société "Ikoma Stock Demo" créée.');
-        $this->command?->info('Admin société : +225 07 00 00 00 01 / IkomaAdmin2026!');
+        $this->command?->info("Admin société : {$phone} / {$code}");
     }
 }

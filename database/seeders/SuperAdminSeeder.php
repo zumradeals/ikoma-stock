@@ -11,15 +11,19 @@ class SuperAdminSeeder extends Seeder
 {
     public function run(): void
     {
+        $phone = '+22507000000';
+        $code = User::generateAccessCode();
+
         User::create([
             'name'       => 'Super Administrateur',
-            'phone'      => '+225 07 00 00 00 00',
-            'password'   => Hash::make('IkomaSuper2026!'),
+            'phone'      => $phone,
+            'email'      => 'superadmin@ikoma.local',
+            'password'   => Hash::make($code),
             'role'       => UserRole::SUPER_ADMIN,
             'company_id' => null,
             'outlet_id'  => null,
         ]);
 
-        $this->command?->info('SUPER_ADMIN créé : +225 07 00 00 00 00 / IkomaSuper2026!');
+        $this->command?->info("SUPER_ADMIN créé : {$phone} / {$code}");
     }
 }

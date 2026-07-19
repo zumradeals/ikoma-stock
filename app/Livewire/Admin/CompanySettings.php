@@ -8,7 +8,6 @@ use App\Models\User;
 use App\Models\Warehouse;
 use App\Services\ImageOptimizer;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
@@ -351,6 +350,7 @@ class CompanySettings extends Component
         $companyId = $this->company->id;
 
         $phone = preg_replace('/\s+/', '', trim($this->userPhone));
+        $this->userPhone = $phone;
 
         $this->validate([
             'userName' => 'required|string|max:255',
@@ -380,7 +380,7 @@ class CompanySettings extends Component
         } else {
             $this->authorize('create', User::class);
 
-            $password = Str::random(6);
+            $password = User::generateAccessCode();
 
             User::create([
                 'company_id' => $companyId,

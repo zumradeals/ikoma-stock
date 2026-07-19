@@ -35,14 +35,12 @@
                     @if ($platformSettings->app_logo_path && \Illuminate\Support\Facades\Storage::disk('public')->exists($platformSettings->app_logo_path))
                         <img src="{{ Storage::url($platformSettings->app_logo_path) }}"
                              alt="{{ $platformSettings->resolvedAppName() }}"
-                             class="mx-auto h-14 w-auto mb-3 object-contain">
+                             class="mx-auto h-[5.5rem] w-auto mb-3 object-contain">
                     @else
                         <a href="/" wire:navigate class="inline-block">
                             <x-application-logo />
                         </a>
                     @endif
-                    <p class="mt-3 text-lg font-semibold text-gray-800">{{ $platformSettings->resolvedAppName() }}</p>
-                    <p class="text-sm text-gray-500">{{ $platformSettings->resolvedAppTagline() }}</p>
                 </div>
             @endunless
 

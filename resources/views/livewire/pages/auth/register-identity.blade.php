@@ -47,13 +47,6 @@ new #[Layout('layouts.auth')] class extends Component
 <div class="space-y-5"
      x-data="{ hasName: false, hasPhone: false }">
 
-    {{-- En-tête --}}
-    <div class="text-center">
-        <div class="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-brand text-white text-xl font-extrabold mb-3 shadow-brand-glow">IK</div>
-        <h1 class="text-lg font-extrabold text-ink">Ikoma Stock</h1>
-        <p class="text-sm text-ink-soft">Crée ton compte gratuitement</p>
-    </div>
-
     {{-- Erreur flash (ex: téléphone déjà utilisé) --}}
     @if (session('onboarding_error'))
         <div class="rounded-xl bg-red-50 border border-red-100 px-3 py-2.5 text-sm text-red-700 text-center">

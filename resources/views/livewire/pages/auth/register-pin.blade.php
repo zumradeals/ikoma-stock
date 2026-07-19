@@ -93,7 +93,6 @@ new #[Layout('layouts.auth')] class extends Component
 
     {{-- En-tête --}}
     <div class="text-center">
-        <div class="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-brand text-white text-xl font-extrabold mb-3 shadow-brand-glow">IK</div>
         <h1 class="text-lg font-extrabold text-ink">
             {{ $pinStep === 'choose' ? 'Choisis ton code PIN' : 'Confirme ton code PIN' }}
         </h1>
@@ -138,21 +137,21 @@ new #[Layout('layouts.auth')] class extends Component
             <button
                 type="button"
                 wire:click="ajouterChiffre('{{ $d }}')"
-                class="h-14 rounded-xl bg-cream text-lg font-bold text-ink active:bg-line transition select-none"
+                class="h-14 rounded-xl bg-blue-600 text-lg font-bold text-white active:bg-blue-700 transition select-none"
             >{{ $d }}</button>
         @endforeach
         <div></div>
         <button
             type="button"
             wire:click="ajouterChiffre('0')"
-            class="h-14 rounded-xl bg-cream text-lg font-bold text-ink active:bg-line transition select-none"
+            class="h-14 rounded-xl bg-blue-600 text-lg font-bold text-white active:bg-blue-700 transition select-none"
         >0</button>
         <button
             type="button"
             wire:click="effacerChiffre"
-            class="h-14 rounded-xl bg-cream text-ink active:bg-line transition flex items-center justify-center select-none"
+            class="h-14 rounded-xl bg-blue-600 text-white active:bg-blue-700 transition flex items-center justify-center select-none"
         >
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-ink-soft" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2M3 12l6.414 6.414a2 2 0 001.414.586H19a2 2 0 002-2V7a2 2 0 00-2-2h-8.172a2 2 0 00-1.414.586L3 12z" />
             </svg>
         </button>

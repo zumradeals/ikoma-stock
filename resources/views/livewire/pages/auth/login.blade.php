@@ -41,9 +41,9 @@ new #[Layout('layouts.auth', ['bareHeader' => true])] class extends Component
         @if ($platformSettings->app_logo_path && \Illuminate\Support\Facades\Storage::disk('public')->exists($platformSettings->app_logo_path))
             <img src="{{ Storage::url($platformSettings->app_logo_path) }}"
                  alt="{{ $platformSettings->resolvedAppName() }}"
-                 class="mx-auto h-16 w-auto max-w-full object-contain">
+                 class="mx-auto h-20 w-auto max-w-full object-contain">
         @else
-            <div class="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-brand text-white text-xl font-extrabold shadow-brand-glow">IK</div>
+            <div class="inline-flex h-20 w-20 items-center justify-center rounded-2xl bg-brand text-white text-2xl font-extrabold shadow-brand-glow">IK</div>
         @endif
     </div>
 
@@ -117,24 +117,24 @@ new #[Layout('layouts.auth', ['bareHeader' => true])] class extends Component
         </div>
 
         {{-- Pavé numérique --}}
-        <div class="grid grid-cols-3 gap-2">
+        <div class="grid grid-cols-3 gap-3">
             @foreach ([1,2,3,4,5,6,7,8,9] as $d)
                 <button
                     type="button"
                     wire:click="ajouterChiffre('{{ $d }}')"
-                    class="h-14 rounded-xl bg-cream text-lg font-bold text-ink active:bg-line transition select-none"
+                    class="h-16 rounded-xl bg-cream text-lg font-bold text-ink active:bg-line transition select-none"
                 >{{ $d }}</button>
             @endforeach
             <div></div>
             <button
                 type="button"
                 wire:click="ajouterChiffre('0')"
-                class="h-14 rounded-xl bg-cream text-lg font-bold text-ink active:bg-line transition select-none"
+                class="h-16 rounded-xl bg-cream text-lg font-bold text-ink active:bg-line transition select-none"
             >0</button>
             <button
                 type="button"
                 wire:click="effacerChiffre"
-                class="h-14 rounded-xl bg-cream text-ink active:bg-line transition flex items-center justify-center select-none"
+                class="h-16 rounded-xl bg-cream text-ink active:bg-line transition flex items-center justify-center select-none"
             >
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-ink-soft" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2M3 12l6.414 6.414a2 2 0 001.414.586H19a2 2 0 002-2V7a2 2 0 00-2-2h-8.172a2 2 0 00-1.414.586L3 12z" />

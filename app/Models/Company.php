@@ -98,7 +98,7 @@ class Company extends Model
     }
 
     /** @var array<string, bool> */
-    protected array $moduleCache = [];
+    public array $moduleCache = [];
 
     public function hasModule(string $code): bool
     {

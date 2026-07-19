@@ -19,6 +19,8 @@ use App\Livewire\Dashboard\SellerHome;
 use App\Livewire\Deliveries\DeliveryDetail;
 use App\Livewire\Deliveries\PendingDeliveries;
 use App\Livewire\Platform\CompanyList;
+use App\Livewire\Platform\CompanyModules;
+use App\Livewire\Platform\ModuleCatalogue;
 use App\Livewire\Platform\PlatformSettingsForm;
 use App\Livewire\Stock\StockCorrection;
 use App\Livewire\Stock\StockMovements;
@@ -109,6 +111,8 @@ Route::middleware('auth')->group(function () {
     Route::middleware('super-admin')->prefix('admin/plateforme')->group(function () {
         Route::get('/', CompanyList::class)->name('platform.index');
         Route::get('/parametres', PlatformSettingsForm::class)->name('platform.settings');
+        Route::get('/modules', ModuleCatalogue::class)->name('platform.modules');
+        Route::get('/modules/societes', CompanyModules::class)->name('platform.company-modules');
     });
 });
 

@@ -55,6 +55,7 @@
         {{-- ── Filtres pilules ── --}}
         <div class="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
             @foreach ([
+                'all'     => 'Toutes',
                 'today'   => "Aujourd'hui",
                 'overdue' => 'En retard',
                 'week'    => 'Cette semaine',

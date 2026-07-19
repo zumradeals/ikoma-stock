@@ -10,7 +10,13 @@ use Livewire\Component;
 #[Layout('layouts.app', ['bareDesktop' => true])]
 class PendingDeliveries extends Component
 {
-    public string $filter = 'today';
+    public string $filter = 'all';
+
+    /**
+     * Une commande non livrée est "en retard" 2 jours après la vente,
+     * indépendamment de l'échéance de paiement (due_date).
+     */
+    private const OVERDUE_AFTER_DAYS = 2;
 
     public function getInvoicesProperty()
     {
@@ -18,17 +24,24 @@ class PendingDeliveries extends Component
             ->with(['sale.customer', 'sale.outlet', 'sale.saleLines'])
             ->whereNotIn('delivery_status', [InvoiceDeliveryStatus::DELIVERED->value, InvoiceDeliveryStatus::CANCELLED->value])
             ->when($this->filter === 'today', fn ($q) => $q->whereDate('due_date', now()->toDateString()))
-            ->when($this->filter === 'overdue', fn ($q) => $q->whereDate('due_date', '<', now()->toDateString()))
+            ->when($this->filter === 'overdue', fn ($q) => $q->where('created_at', '<', now()->subDays(self::OVERDUE_AFTER_DAYS)))
             ->when($this->filter === 'week', fn ($q) => $q->whereBetween('due_date', [now()->startOfDay(), now()->addDays(7)->endOfDay()]))
             ->orderBy('due_date')
             ->get();
+    }
+
+    public function getAllCountProperty(): int
+    {
+        return Invoice::query()
+            ->whereNotIn('delivery_status', [InvoiceDeliveryStatus::DELIVERED->value, InvoiceDeliveryStatus::CANCELLED->value])
+            ->count();
     }
 
     public function getOverdueCountProperty(): int
     {
         return Invoice::query()
             ->whereNotIn('delivery_status', [InvoiceDeliveryStatus::DELIVERED->value, InvoiceDeliveryStatus::CANCELLED->value])
-            ->whereDate('due_date', '<', now()->toDateString())
+            ->where('created_at', '<', now()->subDays(self::OVERDUE_AFTER_DAYS))
             ->count();
     }
 
@@ -42,15 +55,11 @@ class PendingDeliveries extends Component
 
     public function status(Invoice $invoice): string
     {
-        if (! $invoice->due_date) {
-            return 'planifiee';
-        }
-
-        if ($invoice->due_date->isPast() && ! $invoice->due_date->isToday()) {
+        if ($invoice->created_at->lt(now()->subDays(self::OVERDUE_AFTER_DAYS))) {
             return 'retard';
         }
 
-        if ($invoice->due_date->isToday()) {
+        if ($invoice->due_date?->isToday()) {
             return 'aujourd_hui';
         }
 

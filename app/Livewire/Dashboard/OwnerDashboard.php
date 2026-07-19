@@ -87,13 +87,19 @@ class OwnerDashboard extends Component
         return ($pct >= 0 ? '+' : '') . $pct . '%';
     }
 
+    /**
+     * Une commande non livrée est "en retard" 2 jours après la vente,
+     * indépendamment de l'échéance de paiement (due_date). Cohérent avec
+     * PendingDeliveries::OVERDUE_AFTER_DAYS.
+     */
+    private const OVERDUE_AFTER_DAYS = 2;
+
     public function getOverdueDeliveriesProperty()
     {
         return Invoice::query()
             ->where('company_id', $this->company->id)
             ->whereNotIn('delivery_status', [InvoiceDeliveryStatus::DELIVERED->value, InvoiceDeliveryStatus::CANCELLED->value])
-            ->whereNotNull('due_date')
-            ->whereDate('due_date', '<', now()->toDateString())
+            ->where('created_at', '<', now()->subDays(self::OVERDUE_AFTER_DAYS))
             ->get();
     }
 

@@ -36,10 +36,15 @@ new #[Layout('layouts.auth', ['bareHeader' => true])] class extends Component
 <div class="space-y-5">
 
     {{-- En-tête --}}
+    @php $platformSettings = \App\Models\PlatformSetting::current(); @endphp
     <div class="text-center">
-        <div class="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-brand text-white text-xl font-extrabold mb-3 shadow-brand-glow">IK</div>
-        <h1 class="text-lg font-extrabold text-ink">Ikoma Stock</h1>
-        <p class="text-sm text-ink-soft">Connecte-toi avec ton téléphone</p>
+        @if ($platformSettings->app_logo_path && \Illuminate\Support\Facades\Storage::disk('public')->exists($platformSettings->app_logo_path))
+            <img src="{{ Storage::url($platformSettings->app_logo_path) }}"
+                 alt="{{ $platformSettings->resolvedAppName() }}"
+                 class="mx-auto h-28 w-auto max-w-full object-contain">
+        @else
+            <div class="inline-flex h-28 w-28 items-center justify-center rounded-2xl bg-brand text-white text-3xl font-extrabold shadow-brand-glow">IK</div>
+        @endif
     </div>
 
     {{-- Onglets --}}

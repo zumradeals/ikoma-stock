@@ -17,6 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'tenant' => \App\Http\Middleware\EnsureTenantAccess::class,
             'super-admin' => \App\Http\Middleware\SuperAdminOnly::class,
             'role' => \App\Http\Middleware\EnsureRole::class,
+            'module' => \App\Http\Middleware\EnsureModuleEnabled::class,
         ]);
 
         $middleware->web(append: [

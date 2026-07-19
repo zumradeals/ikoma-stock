@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Session;
 use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
 
-new #[Layout('layouts.auth')] class extends Component
+new #[Layout('layouts.auth', ['bareHeader' => true])] class extends Component
 {
     public LoginForm $form;
 

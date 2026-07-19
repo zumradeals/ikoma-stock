@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DeliveryController;
 use App\Http\Controllers\Install\InstallController;
+use App\Http\Controllers\InvoiceVerificationController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\SaleController;
@@ -13,19 +14,28 @@ use App\Livewire\Sales\SaleDetail;
 use App\Livewire\Customers\CustomerCard;
 use App\Livewire\Customers\CustomerList;
 use App\Livewire\Admin\CompanySettings;
+use App\Livewire\Admin\TeamMembers;
 use App\Livewire\Closing\DailyClosingForm;
 use App\Livewire\Dashboard\OwnerDashboard;
 use App\Livewire\Dashboard\SellerHome;
 use App\Livewire\Deliveries\DeliveryDetail;
 use App\Livewire\Deliveries\PendingDeliveries;
 use App\Livewire\Platform\CompanyList;
+use App\Livewire\Platform\CompanyModules;
+use App\Livewire\Platform\ModuleCatalogue;
 use App\Livewire\Platform\PlatformSettingsForm;
 use App\Livewire\Stock\StockCorrection;
 use App\Livewire\Stock\StockMovements;
 use App\Livewire\Stock\StockOverview;
+use App\Livewire\Quotes\NewQuote;
+use App\Livewire\Quotes\QuoteDetail;
+use App\Livewire\Quotes\QuoteList;
 use App\Livewire\Transfers\TransferDetail;
 use App\Livewire\Transfers\TransferList;
 use Illuminate\Support\Facades\Route;
+
+// Route publique de vérification de facture (sans authentification)
+Route::get('/verifier/{token}', InvoiceVerificationController::class)->name('invoice.verify');
 
 Route::prefix('install')->group(function () {
     Route::get('/', [InstallController::class, 'index'])->name('install.index');
@@ -81,7 +91,13 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/paiements', \App\Livewire\Payments\OpenReceivables::class)->name('payments.index');
 
-    Route::prefix('livraisons')->group(function () {
+    Route::prefix('devis')->middleware('module:quotes')->group(function () {
+        Route::get('/', QuoteList::class)->name('quotes.index');
+        Route::get('/nouveau', NewQuote::class)->name('quotes.create');
+        Route::middleware('tenant')->get('/{quote}', QuoteDetail::class)->name('quotes.show');
+    });
+
+    Route::prefix('livraisons')->middleware('module:deliveries')->group(function () {
         Route::get('/', PendingDeliveries::class)->name('deliveries.index');
         Route::middleware('tenant')->get('/{invoice}', DeliveryDetail::class)->name('deliveries.show');
         Route::middleware('tenant')->get('/bon/{delivery}', [DeliveryController::class, 'pdf'])->name('deliveries.pdf');
@@ -104,11 +120,14 @@ Route::middleware('auth')->group(function () {
 
     Route::middleware('role:ADMIN_COMPANY|OUTLET_MANAGER')->prefix('admin')->group(function () {
         Route::get('/', CompanySettings::class)->name('admin.index');
+        Route::get('/equipe', TeamMembers::class)->name('admin.team');
     });
 
     Route::middleware('super-admin')->prefix('admin/plateforme')->group(function () {
         Route::get('/', CompanyList::class)->name('platform.index');
         Route::get('/parametres', PlatformSettingsForm::class)->name('platform.settings');
+        Route::get('/modules', ModuleCatalogue::class)->name('platform.modules');
+        Route::get('/modules/societes', CompanyModules::class)->name('platform.company-modules');
     });
 });
 

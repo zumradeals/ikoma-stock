@@ -77,5 +77,21 @@
     @if ($invoice->company->footer_text)
         <p class="muted" style="margin-top: 24px;">{{ $invoice->company->footer_text }}</p>
     @endif
+
+    @if ($invoice->verification_token)
+        @php
+            $verifyUrl = route('invoice.verify', $invoice->verification_token);
+            $qrBase64  = \App\Support\QrCodeGenerator::pngBase64($verifyUrl);
+        @endphp
+        <div style="margin-top: 24px; border-top: 1px solid #d1d5db; padding-top: 16px; display: table; width: 100%;">
+            <div style="display: table-cell; vertical-align: middle; width: 72px;">
+                <img src="{{ $qrBase64 }}" alt="QR vérification" style="width: 64px; height: 64px;">
+            </div>
+            <div style="display: table-cell; vertical-align: middle; padding-left: 12px;">
+                <p style="margin: 0; font-size: 10px; color: #6b7280;">Vérifiez l'authenticité de cette facture</p>
+                <p style="margin: 2px 0 0; font-size: 9px; color: #9ca3af; word-break: break-all;">{{ $verifyUrl }}</p>
+            </div>
+        </div>
+    @endif
 </body>
 </html>

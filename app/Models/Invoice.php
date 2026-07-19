@@ -6,6 +6,7 @@ use App\Enums\InvoiceDeliveryStatus;
 use App\Enums\InvoicePaymentStatus;
 use App\Exceptions\Business\InvoiceDeletionForbiddenException;
 use App\Traits\BelongsToTenant;
+use Illuminate\Support\Str;
 use App\Traits\HasAudit;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -20,7 +21,7 @@ class Invoice extends Model
     protected $fillable = [
         'company_id', 'sale_id', 'number', 'issue_date', 'due_date',
         'total_amount', 'paid_amount', 'balance_due', 'payment_status',
-        'delivery_status', 'pdf_path',
+        'delivery_status', 'pdf_path', 'verification_token',
     ];
 
     protected function casts(): array
@@ -68,6 +69,12 @@ class Invoice extends Model
      */
     protected static function booted(): void
     {
+        static::creating(function (Invoice $invoice) {
+            if (empty($invoice->verification_token)) {
+                $invoice->verification_token = Str::random(32);
+            }
+        });
+
         static::deleting(function (Invoice $invoice) {
             throw new InvoiceDeletionForbiddenException;
         });

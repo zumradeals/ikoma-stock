@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\HasAudit;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Company extends Model
@@ -87,5 +88,27 @@ class Company extends Model
     public function subscriptions(): HasMany
     {
         return $this->hasMany(Subscription::class);
+    }
+
+    public function modules(): BelongsToMany
+    {
+        return $this->belongsToMany(Module::class, 'company_modules')
+            ->withPivot(['enabled', 'enabled_at', 'enabled_by'])
+            ->withTimestamps();
+    }
+
+    /** @var array<string, bool> */
+    public array $moduleCache = [];
+
+    public function hasModule(string $code): bool
+    {
+        if (! array_key_exists($code, $this->moduleCache)) {
+            $this->moduleCache[$code] = $this->modules()
+                ->where('code', $code)
+                ->wherePivot('enabled', true)
+                ->exists();
+        }
+
+        return $this->moduleCache[$code];
     }
 }

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DeliveryController;
 use App\Http\Controllers\Install\InstallController;
+use App\Http\Controllers\InvoiceVerificationController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\SaleController;
@@ -32,6 +33,9 @@ use App\Livewire\Quotes\QuoteList;
 use App\Livewire\Transfers\TransferDetail;
 use App\Livewire\Transfers\TransferList;
 use Illuminate\Support\Facades\Route;
+
+// Route publique de vérification de facture (sans authentification)
+Route::get('/verifier/{token}', InvoiceVerificationController::class)->name('invoice.verify');
 
 Route::prefix('install')->group(function () {
     Route::get('/', [InstallController::class, 'index'])->name('install.index');

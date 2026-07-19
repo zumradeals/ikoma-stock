@@ -118,6 +118,25 @@
             </a>
         @endif
 
+        {{-- ── QR de vérification ── --}}
+        @if ($sale->invoice?->verification_token)
+            @php
+                $verifyUrl = route('invoice.verify', $sale->invoice->verification_token);
+                $qrSvg     = \App\Support\QrCodeGenerator::svg($verifyUrl);
+            @endphp
+            <div class="rounded-2xl border border-line bg-white px-4 py-3">
+                <p class="text-xs font-extrabold text-ink-soft uppercase tracking-widest mb-3">Vérification</p>
+                <div class="flex items-center gap-4">
+                    <div class="h-20 w-20 shrink-0">{!! $qrSvg !!}</div>
+                    <div class="min-w-0">
+                        <p class="text-sm font-bold text-ink">Authenticité de la facture</p>
+                        <p class="text-xs text-ink-soft mt-0.5">Scannez ce code pour vérifier que cette facture est authentique.</p>
+                        <a href="{{ $verifyUrl }}" target="_blank" class="text-xs text-brand underline mt-1 inline-block break-all">{{ $verifyUrl }}</a>
+                    </div>
+                </div>
+            </div>
+        @endif
+
         {{-- ── Visionneuse PDF ── --}}
         @if ($sale->invoice)
             <livewire:components.invoice-pdf-viewer :invoice="$sale->invoice" wire:key="viewer-{{ $sale->invoice->id }}" />

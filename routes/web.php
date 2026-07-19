@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DeliveryController;
+use App\Http\Controllers\ImpersonationController;
 use App\Http\Controllers\Install\InstallController;
 use App\Http\Controllers\InvoiceVerificationController;
 use App\Http\Controllers\InvoiceController;
@@ -128,7 +129,11 @@ Route::middleware('auth')->group(function () {
         Route::get('/parametres', PlatformSettingsForm::class)->name('platform.settings');
         Route::get('/modules', ModuleCatalogue::class)->name('platform.modules');
         Route::get('/modules/societes', CompanyModules::class)->name('platform.company-modules');
+        Route::post('/support/{user}/start', [ImpersonationController::class, 'start'])->name('support.start');
     });
+
+    // Sortie de mode support — accessible sans super-admin car l'utilisateur courant est impersonné
+    Route::post('/admin/plateforme/support/stop', [ImpersonationController::class, 'stop'])->name('support.stop');
 });
 
 // Route de preview design — locale uniquement, sans authentification

@@ -27,6 +27,21 @@
     @endphp
     <body class="font-sans antialiased bg-orange-50/40 text-gray-900"
           style="--brand:{{ $brandHex }};--brand-dark:{{ $brandDark }};--brand-wash:{{ $brandWash }};">
+
+        {{-- ── Bandeau mode support (impersonation) ── --}}
+        @if (session('impersonating_original_id'))
+            <div class="sticky top-0 z-50 flex items-center justify-between gap-2 bg-gold px-4 py-2 text-xs font-extrabold text-white shadow">
+                <span>⚠ Mode support — vous êtes connecté en tant que <strong>{{ auth()->user()->name }}</strong> ({{ auth()->user()->company?->name }})</span>
+                <form method="POST" action="{{ route('support.stop') }}" class="shrink-0">
+                    @csrf
+                    <button type="submit"
+                            class="rounded-lg border border-white/50 px-3 py-1 text-xs font-extrabold text-white hover:bg-white/20 transition">
+                        Revenir à mon compte
+                    </button>
+                </form>
+            </div>
+        @endif
+
         <div class="{{ ($bareDesktop ?? false) ? 'lg:hidden' : '' }}">
             @include('layouts.partials.top-bar')
         </div>
